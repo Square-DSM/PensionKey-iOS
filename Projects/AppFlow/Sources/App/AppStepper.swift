@@ -9,6 +9,6 @@ public class AppStepper: Stepper {
     public var steps = PublishRelay<RxFlow.Step>()
 
     public func readyToEmitSteps() {
-        steps.accept(PensionStep.loginRequire)
+        steps.accept(PensionStep.tabsRequire)
     }
 }

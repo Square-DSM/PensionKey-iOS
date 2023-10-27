@@ -20,8 +20,10 @@ public class AppFlow: Flow {
         switch step {
         case .loginRequire:
             return presentLoginView()
-        case .tabRequire:
-            return presentTabView()
+        case .tabsRequire:
+            return presentTabsView()
+        default:
+            return .none
         }
     }
 
@@ -39,7 +41,17 @@ public class AppFlow: Flow {
         )
     }
 
-    private func presentTabView() -> FlowContributors {
-        return .none
+    private func presentTabsView() -> FlowContributors {
+        let tabsFlow = TabsFlow()
+        Flows.use(tabsFlow, when: .created) { [weak self] root in
+            self?.window.rootViewController = root
+        }
+
+        return .one(
+            flowContributor: .contribute(
+                withNextPresentable: tabsFlow,
+                withNextStepper: OneStepper(withSingleStep: PensionStep.tabsRequire)
+            )
+        )
     }
 }

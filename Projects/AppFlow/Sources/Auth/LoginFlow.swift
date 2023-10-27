@@ -23,7 +23,7 @@ public class LoginFlow: Flow {
     }
 
     private func presentLoginView() -> FlowContributors {
-        presentalbeView.pushViewController(FirstViewController(), animated: false)
+        presentalbeView.pushViewController(MyPensionViewController(), animated: false)
         return .none
     }
 }
