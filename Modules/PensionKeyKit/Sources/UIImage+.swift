@@ -5,4 +5,5 @@ public extension UIImage {
     static let gift = PensionKeyKitAsset.Image.gift.image
     static let bulletinBoard = PensionKeyKitAsset.Image.bulletinBoard.image
     static let account = PensionKeyKitAsset.Image.account.image
+    static let logo = PensionKeyKitAsset.Image.logo.image
 }
