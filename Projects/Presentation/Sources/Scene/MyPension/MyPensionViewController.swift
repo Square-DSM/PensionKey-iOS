@@ -12,14 +12,14 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         $0.image = .logo
     }
     private let logoLabel = UILabel().then {
-        $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        $0.font = PensionKeyKitFontFamily.Pretendard.extraBold.font(size: 16)
         $0.textColor = .gray500
         $0.text = "연금열쇠"
     }
     private let nameLabel = UIPaddingLabel(padding: .init(top: 2, left: 8, bottom: 2, right: 8)).then {
         $0.text = "박주영"
         $0.backgroundColor = .yellow100
-        $0.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        $0.font = .labelSmall
         $0.textColor = .yellow900
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
@@ -27,16 +27,16 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
     private let nameInfoLabel = UILabel().then {
         $0.text = "님은 연금으로 총"
         $0.textColor = .black
-        $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        $0.font = .bodySmall
     }
     private let totalMoneyLabel = UILabel().then {
         $0.text = "320,000원"
-        $0.font = UIFont.systemFont(ofSize: 40, weight: .semibold)
+        $0.font = .titleLarge
         $0.textColor = .black
     }
     private let moneyInfoLabel = UILabel().then {
         $0.text = "을 받고 있어요"
-        $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        $0.font = .bodyMedium
         $0.textColor = .black
     }
     private lazy var pensionColletionView: UICollectionView = {
@@ -53,7 +53,6 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
     }()
 
     public override func attribute() {
-        self.navigationController?.isNavigationBarHidden = true
         pensionColletionView.dataSource = self
         pensionColletionView.delegate = self
     }
@@ -83,7 +82,7 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
             $0.width.height.equalTo(32)
         }
         logoLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(66)
+            $0.centerY.equalTo(logoImageView.snp.centerY)
             $0.leading.equalTo(logoImageView.snp.trailing).offset(4)
         }
         nameLabel.snp.makeConstraints {
