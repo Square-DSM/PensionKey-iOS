@@ -9,7 +9,7 @@ public class MyPageFlow: Flow {
         return rootViewController
     }
 
-    let rootViewController = UINavigationController()
+    let rootViewController = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -23,9 +23,11 @@ public class MyPageFlow: Flow {
     }
 
     private func presentMyPageView() -> FlowContributors {
-        let myPageViewController = MyPageViewController()
+        let myPageViewController = MyPageViewController(MyPageViewModel())
         rootViewController.pushViewController(myPageViewController, animated: false)
-        return .one(flowContributor: .contribute(withNext: myPageViewController)
-        )
+        return .one(flowContributor: .contribute(
+            withNextPresentable: myPageViewController,
+            withNextStepper: myPageViewController.viewModel
+        ))
     }
 }

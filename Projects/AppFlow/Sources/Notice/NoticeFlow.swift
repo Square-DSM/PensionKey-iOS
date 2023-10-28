@@ -9,7 +9,7 @@ public class NoticeFlow: Flow {
         return rootViewController
     }
 
-    let rootViewController = UINavigationController()
+    let rootViewController = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -23,9 +23,11 @@ public class NoticeFlow: Flow {
     }
 
     private func presentNoticeView() -> FlowContributors {
-        let noticeViewController = NoticeViewController()
+        let noticeViewController = NoticeViewController(NoticeViewModel())
         rootViewController.pushViewController(noticeViewController, animated: false)
-        return .one(flowContributor: .contribute(withNext: noticeViewController)
-        )
+        return .one(flowContributor: .contribute(
+            withNextPresentable: noticeViewController,
+            withNextStepper: noticeViewController.viewModel
+        ))
     }
 }
