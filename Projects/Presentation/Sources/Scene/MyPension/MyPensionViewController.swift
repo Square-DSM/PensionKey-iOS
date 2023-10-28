@@ -8,6 +8,14 @@ import PensionKeyKit
 import Core
 
 public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
+    private let logoImageView = UIImageView().then {
+        $0.image = .logo
+    }
+    private let logoLabel = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        $0.textColor = .gray500
+        $0.text = "연금열쇠"
+    }
     private let nameLabel = UIPaddingLabel(padding: .init(top: 2, left: 8, bottom: 2, right: 8)).then {
         $0.text = "박주영"
         $0.backgroundColor = .yellow100
@@ -45,6 +53,7 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
     }()
 
     public override func attribute() {
+        self.navigationController?.isNavigationBarHidden = true
         pensionColletionView.dataSource = self
         pensionColletionView.delegate = self
     }
@@ -58,6 +67,8 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
 
     public override func addView() {
         [
+            logoImageView,
+            logoLabel,
             nameLabel,
             nameInfoLabel,
             totalMoneyLabel,
@@ -66,13 +77,22 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         ].forEach { self.view.addSubview($0) }
     }
     public override func setLayout() {
+        logoImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(61)
+            $0.leading.equalToSuperview().inset(18)
+            $0.width.height.equalTo(32)
+        }
+        logoLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(66)
+            $0.leading.equalTo(logoImageView.snp.trailing).offset(4)
+        }
         nameLabel.snp.makeConstraints {
             $0.leading.equalTo(20)
-            $0.topMargin.equalTo(32)
+            $0.top.equalTo(logoImageView.snp.bottom).offset(40)
         }
         nameInfoLabel.snp.makeConstraints {
             $0.leading.equalTo(nameLabel.snp.trailing).offset(8)
-            $0.topMargin.equalTo(34)
+            $0.top.equalTo(logoImageView.snp.bottom).offset(40)
         }
         totalMoneyLabel.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom).offset(8)
