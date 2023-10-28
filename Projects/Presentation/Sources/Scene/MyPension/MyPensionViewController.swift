@@ -7,9 +7,7 @@ import RxFlow
 import PensionKeyKit
 import Core
 
-public class MyPensionViewController: UIViewController, Stepper {
-    public let steps = PublishRelay<Step>()
-    private let disposeBag = DisposeBag()
+public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
     private let nameLabel = UIPaddingLabel(padding: .init(top: 2, left: 8, bottom: 2, right: 8)).then {
         $0.text = "박주영"
         $0.backgroundColor = .yellow100
@@ -46,20 +44,19 @@ public class MyPensionViewController: UIViewController, Stepper {
         return collectionView
     }()
 
-    public override func viewDidLoad() {
-        super.viewDidLoad()
+    public override func attribute() {
         pensionColletionView.dataSource = self
         pensionColletionView.delegate = self
-        view.backgroundColor = .white
-        pensionColletionView.rx.itemSelected
-            .map { _ in PensionStep.myPensionDetailRequire }
-            .bind(to: steps)
-            .disposed(by: disposeBag)
-        addView()
-        setLayout()
     }
 
-    private func addView() {
+    public override func bind() {
+        let input = MyPensionViewModel.Input(
+            isSelectedCollectionViewCell: pensionColletionView.rx.itemSelected.asControlEvent()
+        )
+        _ = viewModel.transform(input)
+    }
+
+    public override func addView() {
         [
             nameLabel,
             nameInfoLabel,
@@ -68,8 +65,7 @@ public class MyPensionViewController: UIViewController, Stepper {
             pensionColletionView
         ].forEach { self.view.addSubview($0) }
     }
-
-    private func setLayout() {
+    public override func setLayout() {
         nameLabel.snp.makeConstraints {
             $0.leading.equalTo(20)
             $0.topMargin.equalTo(32)
