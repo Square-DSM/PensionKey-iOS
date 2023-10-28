@@ -9,7 +9,7 @@ public class BenefitFlow: Flow {
         return rootViewController
     }
 
-    let rootViewController = UINavigationController()
+    let rootViewController = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -23,9 +23,11 @@ public class BenefitFlow: Flow {
     }
 
     private func presentBenefitView() -> FlowContributors {
-        let benefitViewController = BenefitViewController()
+        let benefitViewController = BenefitViewController(BenefitViewModel())
         rootViewController.pushViewController(benefitViewController, animated: false)
-        return .one(flowContributor: .contribute(withNext: benefitViewController)
-        )
+        return .one(flowContributor: .contribute(
+            withNextPresentable: benefitViewController,
+            withNextStepper: benefitViewController.viewModel
+        ))
     }
 }

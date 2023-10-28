@@ -9,7 +9,7 @@ public class MyPensionFlow: Flow {
         return rootViewController
     }
 
-    let rootViewController = UINavigationController()
+    let rootViewController = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -25,16 +25,20 @@ public class MyPensionFlow: Flow {
     }
 
     private func presentMyPensionView() -> FlowContributors {
-        let myPensionViewController = MyPensionViewController()
+        let myPensionViewController = MyPensionViewController(MyPensionViewModel())
         rootViewController.pushViewController(myPensionViewController, animated: false)
-        return .one(flowContributor: .contribute(withNext: myPensionViewController)
-        )
+        return .one(flowContributor: .contribute(
+            withNextPresentable: myPensionViewController,
+            withNextStepper: myPensionViewController.viewModel
+        ))
     }
 
     private func presentMyPensionDetailView() -> FlowContributors {
-        let myPensionDetailViewController = MyPensionDetailViewController()
+        let myPensionDetailViewController = MyPensionDetailViewController(MyPensionDetailViewModel())
         rootViewController.pushViewController(myPensionDetailViewController, animated: true)
-        return .one(flowContributor: .contribute(withNext: myPensionDetailViewController)
-        )
+        return .one(flowContributor: .contribute(
+            withNextPresentable: myPensionDetailViewController,
+            withNextStepper: myPensionDetailViewController.viewModel
+        ))
     }
 }
