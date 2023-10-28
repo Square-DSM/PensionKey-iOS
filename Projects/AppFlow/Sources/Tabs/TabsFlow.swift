@@ -16,12 +16,10 @@ public class TabsFlow: Flow {
         $0.tabBar.backgroundColor = .white
         $0.tabBar.layer.cornerRadius = 12
         let shadowView = UIView().then {
-            $0.layer.shadowRadius = 12
-            $0.layer.shadowColor = UIColor.black.cgColor
-            $0.layer.shadowOffset = .init(width: 0, height: 2)
-            $0.layer.shadowOpacity = 0.2
             $0.backgroundColor = .white
             $0.layer.cornerRadius = 12
+            $0.layer.borderColor = UIColor.gray50.cgColor
+            $0.layer.borderWidth = 2
             $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
         $0.tabBar.addSubview(shadowView)
