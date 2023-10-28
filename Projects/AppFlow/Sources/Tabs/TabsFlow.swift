@@ -92,8 +92,22 @@ public class TabsFlow: Flow {
         }
         
         return .multiple(flowContributors: [
-            .contribute(withNextPresentable: myPensionFlow,
-                        withNextStepper: OneStepper(withSingleStep: PensionStep.myPensionRequire))
+            .contribute(
+                withNextPresentable: myPensionFlow,
+                withNextStepper: OneStepper(withSingleStep: PensionStep.myPensionRequire)
+            ),
+            .contribute(
+                withNextPresentable: noticeFlow,
+                withNextStepper: OneStepper(withSingleStep: PensionStep.noticeRequire)
+            ),
+            .contribute(
+                withNextPresentable: benefitFlow,
+                withNextStepper: OneStepper(withSingleStep: PensionStep.benefitRequire)
+            ),
+            .contribute(
+                withNextPresentable: myPageFlow,
+                withNextStepper: OneStepper(withSingleStep: PensionStep.myPageRequire)
+            )
         ])
     }
 }
