@@ -11,12 +11,12 @@ class MyPensionCollectionViewCell: UICollectionViewCell {
         $0.image = .checkmark
     }
     let pensionTypeLabel = UILabel().then {
-        $0.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        $0.font = .bodySmall
         $0.textColor = .black
         $0.text = "국민연금"
     }
     let pensionLabel = UILabel().then {
-        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.font = .titleMedium
         $0.textColor = .black
         $0.text = "300,000원"
     }

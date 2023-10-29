@@ -59,28 +59,28 @@ public class TabsFlow: Flow {
                 image: .coin.withTintColor(.gray400, renderingMode: .alwaysOriginal),
                 selectedImage: .coin
             ).then {
-                $0.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)
+                $0.setTitleTextAttributes([.font: UIFont.labelSmall], for: .normal)
             }
             let tabBarItem2 = UITabBarItem(
                 title: "게시판",
                 image: .bulletinBoard.withTintColor(.gray400, renderingMode: .alwaysOriginal),
                 selectedImage: .bulletinBoard
             ).then {
-                $0.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)
+                $0.setTitleTextAttributes([.font: UIFont.labelSmall], for: .normal)
             }
             let tabBarItem3 = UITabBarItem(
                 title: "혜택",
                 image: .gift.withTintColor(.gray400, renderingMode: .alwaysOriginal),
                 selectedImage: .gift
             ).then {
-                $0.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)
+                $0.setTitleTextAttributes([.font: UIFont.labelSmall], for: .normal)
             }
             let tabBarItem4 = UITabBarItem(
                 title: "마이",
                 image: .account.withTintColor(.gray400, renderingMode: .alwaysOriginal),
                 selectedImage: .account
             ).then {
-                $0.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)
+                $0.setTitleTextAttributes([.font: UIFont.labelSmall], for: .normal)
             }
             root1.tabBarItem = tabBarItem1
             root2.tabBarItem = tabBarItem2
