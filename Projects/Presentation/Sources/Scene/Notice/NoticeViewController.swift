@@ -26,8 +26,7 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
         $0.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
         $0.showsVerticalScrollIndicator = false
         $0.tableHeaderView = UIView()
-        $0.separatorStyle = .singleLine
-        $0.separatorColor = .gray100
+        $0.separatorInset.left = 0
     }
     public override func attribute() {
         noticeTableView.dataSource = self
@@ -41,6 +40,7 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
     public override func bind() {
         let input = NoticeViewModel.Input(
             writeNotcieButtonDidTap: writeNoticeButton.rx.tap.asSignal(),
+            searchButtonDidTap: searchButton.rx.tap.asSignal(),
             noticeTableViewCellDidTap: noticeTableView.rx.itemSelected
         )
         _ = viewModel.transform(input)
@@ -80,7 +80,6 @@ extension NoticeViewController: UITableViewDataSource, UITableViewDelegate {
         ) as? NoticeTableViewCell else { return UITableViewCell() }
         let list = ["국민연금이 뭔가요?", "기초생활 수급자도 국민연금에 가입할 수 있나요?", "물가가 오르면 연금액도 올라가나요?"]
         cell.titleLabel.text = list[indexPath.row]
-        cell.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
         cell.selectionStyle = .none
         cell.setUp()
         return cell
