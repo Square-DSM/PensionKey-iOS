@@ -9,10 +9,14 @@ import Core
 
 public class NoticeDetailViewController: BaseViewController<NoticeDetailViewModel> {
 
+    private let editPostRelay = PublishRelay<Void>()
+    private let deletePostRelay = PublishRelay<Void>()
+
     private let scrollView = UIScrollView()
     private let contentView = UIView()
 
     public let profileView = ProfileView()
+
     let imageView = UIImageView().then {
         $0.image = .checkmark
     }
@@ -32,6 +36,19 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
     }
 
     public let commentView = CommentView()
+
+    public override func attribute() {
+        settingAlertAndMenu()
+    }
+
+    public override func bind() {
+        let input = NoticeDetailViewModel.Input(
+            deletePostButtonDidClick: deletePostRelay.asSignal(),
+            editPostButtonDidClick: editPostRelay.asSignal()
+        )
+
+        _ = viewModel.transform(input)
+    }
 
     public override func addView() {
         self.view.addSubview(scrollView)
@@ -81,5 +98,40 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
             $0.top.equalTo(spacerView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
         }
+    }
+
+    private func settingAlertAndMenu() {
+        let deleteAlert = UIAlertController(
+            title: "게시글 삭제",
+            message: "정말 게시글을 삭제하실건가요?",
+            preferredStyle: .alert
+        )
+        let alertAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            self.deletePostRelay.accept(())
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        [
+            alertAction,
+            cancelAction
+        ].forEach { deleteAlert.addAction($0) }
+
+        let editAction = UIAction(
+            title: "게시글 수정",
+            image: .pencil,
+            handler: { _ in self.editPostRelay.accept(())}
+        )
+        let deleteAction = UIAction(
+            title: "게시글 삭제",
+            image: .trashCan,
+            handler: { _ in self.present(deleteAlert, animated: true)}
+        )
+        let moreMenu = UIMenu(
+            title: "",
+            image: nil,
+            identifier: nil,
+            options: .destructive,
+            children: [editAction, deleteAction]
+        )
+        profileView.moreButton.menu = moreMenu
     }
 }
