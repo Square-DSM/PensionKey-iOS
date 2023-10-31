@@ -15,7 +15,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
         "국민 연금 납부 금액"
     ])
 
-    private let titleViewLable = UILabel().then {
+    private let titleViewLabel = UILabel().then {
         $0.text = "게시글 검색"
         $0.textColor = .black
         $0.font = .bodyMedium
@@ -85,7 +85,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
 
     public override func attribute() {
         self.navigationItem.searchController = searchController
-        self.navigationItem.titleView = titleViewLable
+        self.navigationItem.titleView = titleViewLabel
     }
 
     public override func addView() {
@@ -179,16 +179,16 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .bind { [weak self] text in
                 self?.searchKeywordView.isHidden = !text.isEmpty
-//                self?.searchResultView.isHidden = self?.searchResultTableView.numberOfRows(inSection: 0) == 0
-//                let emptyText: String = {
-//                    var str: String
-//                    if text.count > 10 {
-//                        str = "\(text.prefix(10))..."
-//                    } else { str = text }
-//                    str.append("에 대한 게시글이 없어요.")
-//                    return str
-//                }()
-//                self?.resultEmptyLabel.text = emptyText
+                self?.searchResultView.isHidden = self?.searchResultTableView.numberOfRows(inSection: 0) == 0
+                let emptyText: String = {
+                    var str: String
+                    if text.count > 10 {
+                        str = "\(text.prefix(10))..."
+                    } else { str = text }
+                    str.append("에 대한 게시글이 없어요.")
+                    return str
+                }()
+                self?.resultEmptyLabel.text = emptyText
             }
             .disposed(by: disposeBag)
 
