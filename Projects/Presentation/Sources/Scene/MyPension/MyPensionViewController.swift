@@ -8,6 +8,7 @@ import PensionKeyKit
 import Core
 
 public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
+
     private let logoImageView = UIImageView().then {
         $0.image = .logo
     }
