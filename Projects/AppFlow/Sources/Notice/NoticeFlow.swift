@@ -17,6 +17,12 @@ public class NoticeFlow: Flow {
         switch step {
         case .noticeRequire:
             return presentNoticeView()
+        case .writeNoticeRequire:
+            return presentWriteNoticeView()
+        case .noticeDetailRequire:
+            return presentNoticeDetailView()
+        case .searchRequire:
+            return presentSearchView()
         default:
             return .none
         }
@@ -28,6 +34,33 @@ public class NoticeFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: noticeViewController,
             withNextStepper: noticeViewController.viewModel
+        ))
+    }
+
+    private func presentWriteNoticeView() -> FlowContributors {
+        let writeNoticeViewController = WriteNoticeViewController(WriteNoticeViewModel())
+        rootViewController.pushViewController(writeNoticeViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: writeNoticeViewController,
+            withNextStepper: writeNoticeViewController.viewModel
+        ))
+    }
+
+    private func presentNoticeDetailView() -> FlowContributors {
+        let noticeDetailViewController = NoticeDetailViewController(NoticeDetailViewModel())
+        rootViewController.pushViewController(noticeDetailViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: noticeDetailViewController,
+            withNextStepper: noticeDetailViewController.viewModel
+        ))
+    }
+
+    private func presentSearchView() -> FlowContributors {
+        let searchViewController = SearchViewController(SearchViewModel())
+        rootViewController.pushViewController(searchViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: searchViewController,
+            withNextStepper: searchViewController.viewModel
         ))
     }
 }

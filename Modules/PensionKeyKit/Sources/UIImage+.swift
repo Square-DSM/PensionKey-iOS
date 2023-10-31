@@ -11,4 +11,7 @@ public extension UIImage {
     static let manWithXmark = PensionKeyKitAsset.Image.manWithXmakr.image
     static let changeLock = PensionKeyKitAsset.Image.changeLock.image
     static let quit = PensionKeyKitAsset.Image.quit.image
+    static let pencil = PensionKeyKitAsset.Image.pencil.image
+    static let chat = PensionKeyKitAsset.Image.chat.image
+    static let xmark = PensionKeyKitAsset.Image.xmark.image
 }

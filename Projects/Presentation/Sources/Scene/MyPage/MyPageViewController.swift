@@ -185,12 +185,12 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
             $0.top.equalToSuperview().inset(24)
         }
         userNameLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.right).offset(18)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(18)
             $0.centerY.equalTo(profileImageView.snp.centerY).offset(-16)
             $0.height.equalTo(32)
         }
         userIdLabel.snp.makeConstraints {
-            $0.leading.equalTo(userNameLabel.snp.left)
+            $0.leading.equalTo(userNameLabel)
             $0.top.equalTo(userNameLabel.snp.bottom).offset(3)
             $0.height.equalTo(22)
         }
