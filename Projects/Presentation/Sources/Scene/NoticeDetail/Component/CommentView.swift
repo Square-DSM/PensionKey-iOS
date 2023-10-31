@@ -15,9 +15,8 @@ public class CommentView: UIView {
         $0.textColor = .yellow500
     }
     private let commentTextField = UITextField().then {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: $0.frame.height))
-        $0.leftView = paddingView
-        $0.leftViewMode = .always
+        $0.addLeftPadding(size: 12)
+        $0.addRightPadding(size: 12)
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.gray300.cgColor
         $0.layer.cornerRadius = 6
