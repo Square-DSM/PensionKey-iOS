@@ -8,6 +8,7 @@ import PensionKeyKit
 import Core
 
 public class NoticeViewController: BaseViewController<NoticeViewModel> {
+    let viewAppear = PublishRelay<Void>()
     private let titleLabel = UILabel().then {
         $0.text = "게시판"
         $0.font = .titleMedium
@@ -29,21 +30,33 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
         $0.separatorInset.left = 0
     }
     public override func attribute() {
-        noticeTableView.dataSource = self
-        noticeTableView.delegate = self
         setNavigationBar()
     }
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
+        self.viewAppear.accept(())
     }
     public override func bind() {
         let input = NoticeViewModel.Input(
+            viewAppear: viewAppear.asSignal(),
             writeNotcieButtonDidTap: writeNoticeButton.rx.tap.asSignal(),
             searchButtonDidTap: searchButton.rx.tap.asSignal(),
             noticeTableViewCellDidTap: noticeTableView.rx.itemSelected
         )
-        _ = viewModel.transform(input)
+        let output = viewModel.transform(input)
+        output.noticeList.asObservable()
+            .bind(to: noticeTableView.rx.items(
+                cellIdentifier: NoticeTableViewCell.identifier,
+                cellType: NoticeTableViewCell.self
+            )) { row, item, cell in
+                cell.titleLabel.text = item.title
+                cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt)"
+//                cell.commentStateView.text =
+                cell.id = item.id
+                cell.selectionStyle = .none
+                cell.setUp()
+            }.disposed(by: disposeBag)
     }
 
     private func setNavigationBar() {
@@ -65,23 +78,5 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottomMargin.equalToSuperview().inset(12)
         }
-    }
-}
-
-extension NoticeViewController: UITableViewDataSource, UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: NoticeTableViewCell.identifier,
-            for: indexPath
-        ) as? NoticeTableViewCell else { return UITableViewCell() }
-        let list = ["국민연금이 뭔가요?", "기초생활 수급자도 국민연금에 가입할 수 있나요?", "물가가 오르면 연금액도 올라가나요?"]
-        cell.titleLabel.text = list[indexPath.row]
-        cell.selectionStyle = .none
-        cell.setUp()
-        return cell
     }
 }
