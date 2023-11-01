@@ -8,7 +8,6 @@ struct NoticeDetailDTO: Decodable {
         case content
         case createdAt = "created_at"
         case userAccountId = "user_account_id"
-        case commentList = "comment_list"
     }
 
     let id: String
@@ -16,7 +15,6 @@ struct NoticeDetailDTO: Decodable {
     let content: String
     let createdAt: String
     let userAccountId: String
-    let commentList: [CommentDTO]
 }
 
 extension NoticeDetailDTO {
@@ -26,8 +24,7 @@ extension NoticeDetailDTO {
             title: self.title,
             content: self.content,
             createdAt: self.createdAt,
-            userAccountId: self.userAccountId,
-            commentList: self.commentList.map { $0.toDomain() }
+            userAccountId: self.userAccountId
         )
     }
 }
