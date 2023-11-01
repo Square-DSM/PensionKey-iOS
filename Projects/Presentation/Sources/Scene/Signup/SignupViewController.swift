@@ -36,7 +36,8 @@ public class SignupViewController: BaseViewController<SignupViewModel> {
     private let passwordTextField = AuthTextFieldView().then {
         $0.setUpView(
             title: "비밀번호",
-            placeholder: "비밀번호를 입력해주세요."
+            placeholder: "비밀번호를 입력해주세요.",
+            isSecure: true
         )
     }
     private let signupButton = UIButton(type: .system).then {
@@ -56,6 +57,13 @@ public class SignupViewController: BaseViewController<SignupViewModel> {
         $0.setTitleColor(.blue500, for: .normal)
         $0.titleLabel?.font = .labelSmall
     }
+    private let certificationButton = UIButton(type: .system).then {
+        $0.setTitle("공동 인증서 인증하기", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .bodyMedium
+        $0.backgroundColor = .gray50
+        $0.layer.cornerRadius = 8
+    }
     public override func attribute() {
         self.navigationController?.isNavigationBarHidden = true
     }
@@ -72,6 +80,7 @@ public class SignupViewController: BaseViewController<SignupViewModel> {
             nameTextField,
             idTextField,
             passwordTextField,
+            certificationButton,
             signupButton,
             loginLabel,
             loginButton
@@ -106,13 +115,19 @@ public class SignupViewController: BaseViewController<SignupViewModel> {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(74)
         }
+        certificationButton.snp.makeConstraints {
+            $0.top.equalTo(passwordTextField.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().inset(20)
+            $0.width.equalTo(165)
+            $0.height.equalTo(38)
+        }
         signupButton.snp.makeConstraints {
             $0.bottom.equalTo(loginLabel.snp.top).offset(-24)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(46)
         }
         loginLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview().offset(-30)
+            $0.centerX.equalToSuperview().offset(-25)
             $0.bottom.equalToSuperview().inset(58)
         }
         loginButton.snp.makeConstraints {

@@ -33,7 +33,6 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
             placeholder: "비밀번호를 입력해주세요.",
             isSecure: true
         )
-        $0.textField.addRightPadding(size: 32)
     }
     private let loginButton = UIButton(type: .system).then {
         $0.setTitle("로그인", for: .normal)

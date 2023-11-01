@@ -39,6 +39,7 @@ public class AuthTextFieldView: UIView {
             $0.height.equalTo(46)
         }
         if isSecure {
+            textField.addRightPadding(size: 40)
             textField.addSubview(secureButton)
             secureButton.snp.makeConstraints {
                 $0.centerY.equalToSuperview()
