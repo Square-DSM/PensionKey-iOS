@@ -37,7 +37,7 @@ public class NoticeViewModel: BaseViewModel, Stepper {
             .bind(to: steps)
             .disposed(by: disposeBag)
         input.noticeTableViewCellDidTap.asObservable()
-            .map { _ in PensionStep.noticeDetailRequire }
+            .map { PensionStep.noticeDetailRequire(id: noticeList.value[$0.row].id) }
             .bind(to: steps)
             .disposed(by: disposeBag)
         input.searchButtonDidTap.asObservable()

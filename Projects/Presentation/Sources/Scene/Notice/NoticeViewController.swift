@@ -52,7 +52,7 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
             )) { row, item, cell in
                 cell.titleLabel.text = item.title
                 cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt)"
-//                cell.commentStateView.text =
+                cell.commentStateView.commentStateLabel.text = "\(item.commentCount)"
                 cell.id = item.id
                 cell.selectionStyle = .none
                 cell.setUp()
