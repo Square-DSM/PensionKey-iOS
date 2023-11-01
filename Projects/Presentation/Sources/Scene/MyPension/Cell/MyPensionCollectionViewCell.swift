@@ -5,10 +5,10 @@ import PensionKeyKit
 
 class MyPensionCollectionViewCell: UICollectionViewCell {
     static let identifier = "MyPensionTableViewCell"
+
     let pensionImageView = UIImageView().then {
         $0.layer.cornerRadius = 100
-        $0.backgroundColor = .red
-        $0.image = .checkmark
+        $0.image = .nationalPension
     }
     let pensionTypeLabel = UILabel().then {
         $0.font = .bodySmall
@@ -20,17 +20,26 @@ class MyPensionCollectionViewCell: UICollectionViewCell {
         $0.textColor = .black
         $0.text = "300,000원"
     }
+    let contentLabel = UILabel().then {
+        $0.font = .bodySmall
+        $0.textColor = .gray600
+        $0.numberOfLines = 0
+        $0.text = "2개월 동안 납부했어요."
+    }
+
     override func layoutSubviews() {
         self.backgroundColor = .gray50
         self.layer.cornerRadius = 12
         addView()
         setLayout()
     }
+
     private func addView() {
         [
             pensionImageView,
             pensionTypeLabel,
-            pensionLabel
+            pensionLabel,
+            contentLabel
         ].forEach { addSubview($0) }
     }
     private func setLayout() {
@@ -46,6 +55,11 @@ class MyPensionCollectionViewCell: UICollectionViewCell {
         pensionLabel.snp.makeConstraints {
             $0.top.equalTo(pensionTypeLabel.snp.bottom).offset(4)
             $0.leading.equalTo(pensionImageView.snp.trailing).offset(8)
+        }
+        contentLabel.snp.makeConstraints {
+            $0.top.equalTo(pensionLabel.snp.bottom).offset(4)
+            $0.leading.equalTo(pensionLabel)
+            $0.trailing.equalToSuperview().inset(40)
         }
     }
 }

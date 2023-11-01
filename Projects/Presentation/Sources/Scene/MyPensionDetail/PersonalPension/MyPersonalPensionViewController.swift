@@ -7,7 +7,7 @@ import RxFlow
 import PensionKeyKit
 import Core
 
-public class MyPensionDetailViewController: BaseViewController<MyPensionDetailViewModel> {
+public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensionViewModel> {
 
     private let scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
@@ -23,15 +23,15 @@ public class MyPensionDetailViewController: BaseViewController<MyPensionDetailVi
     }
 
     private let pensionImageView = UIImageView().then {
+        $0.image = .personalPension
         $0.layer.cornerRadius = 32
         $0.contentMode = .scaleAspectFill
-        $0.clipsToBounds = true
         $0.backgroundColor = .gray50
     }
 
     private let pensionTypeLabel = UILabel().then {
         $0.textColor = .yellow500
-        $0.text = "국민연금"
+        $0.text = "개인연금"
         $0.font = .titleLarge
     }
 
@@ -41,13 +41,40 @@ public class MyPensionDetailViewController: BaseViewController<MyPensionDetailVi
         $0.font = .titleLarge
     }
 
-    private let ablePensionLabel = UIPaddingLabel(padding: UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)).then {
+    private let ablePensionLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "받을 수 있는 연금"
-        $0.font = .labelSmall
-        $0.backgroundColor = .yellow100
-        $0.layer.cornerRadius = 10
-        $0.clipsToBounds = true
+        $0.text = "을 받을 수 있어요"
+        $0.font = .bodyMedium
+    }
+
+    // MARK: 추가
+    private let perPentionMarkLabel = UILabel().then {
+        $0.textColor = .gray700
+        $0.text = "삼성 생명 다이렉트"
+        $0.font = .titleSmall
+    }
+
+    private let perPentionLabel = UILabel().then {
+        $0.textColor = .black
+        $0.text = "삼성 인터넷 NEW 연금보험"
+        $0.font = .titleMedium
+    }
+
+    private let moneyBackgroundView = UIView().then {
+        $0.backgroundColor = .gray50
+        $0.layer.cornerRadius = 6
+    }
+
+    private let totalMonryMarkLabel = UILabel().then {
+        $0.textColor = .gray700
+        $0.text = "총 납입 금액"
+        $0.font = .titleSmall
+    }
+
+    private let totalMonryLabel = UILabel().then {
+        $0.textColor = .black
+        $0.text = "2,000,000원"
+        $0.font = .titleMedium
     }
 
     public override func viewDidLoad() {
@@ -62,8 +89,18 @@ public class MyPensionDetailViewController: BaseViewController<MyPensionDetailVi
             pensionImageView,
             pensionTypeLabel,
             pensionPriceLabel,
-            ablePensionLabel
+            ablePensionLabel,
+            
+            perPentionMarkLabel,
+            perPentionLabel,
+
+            moneyBackgroundView
         ].forEach { contentView.addSubview($0) }
+
+        [
+            totalMonryMarkLabel,
+            totalMonryLabel
+        ].forEach { moneyBackgroundView.addSubview($0) }
     }
 
     public override func setLayout() {
@@ -97,6 +134,30 @@ public class MyPensionDetailViewController: BaseViewController<MyPensionDetailVi
             $0.width.equalToSuperview()
             $0.height.equalTo(8)
             $0.top.equalTo(ablePensionLabel.snp.bottom).offset(42)
+        }
+
+
+        perPentionMarkLabel.snp.makeConstraints {
+            $0.top.equalTo(separateView.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().inset(20)
+        }
+        perPentionLabel.snp.makeConstraints {
+            $0.top.equalTo(perPentionMarkLabel.snp.bottom).offset(8)
+            $0.leading.equalTo(perPentionMarkLabel)
+        }
+
+        moneyBackgroundView.snp.makeConstraints {
+            $0.top.equalTo(perPentionLabel.snp.bottom).offset(24)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(totalMonryLabel).offset(24)
+        }
+        totalMonryMarkLabel.snp.makeConstraints {
+            $0.top.leading.equalToSuperview().inset(24)
+        }
+        totalMonryLabel.snp.makeConstraints {
+            $0.top.equalTo(totalMonryMarkLabel.snp.bottom).offset(4)
+            $0.leading.equalTo(totalMonryMarkLabel)
+            $0.height.equalTo(32)
         }
     }
 }
