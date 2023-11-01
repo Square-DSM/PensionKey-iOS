@@ -9,7 +9,11 @@ public class SignupFlow: Flow {
         return presentalbeView
     }
 
-    let presentalbeView = SignupViewController(SignupViewModel())
+    let presentalbeView: SignupViewController
+    public init() {
+        self.presentalbeView = SignupViewController(container.signupViewModel)
+    }
+    private let container = StepperDI.shared
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -19,6 +23,8 @@ public class SignupFlow: Flow {
             return presentLoginView()
         case .signupRequire:
             return presentSignupView()
+        case .errorRequire:
+            return presentError(view: self.presentalbeView)
         default:
             return .none
         }

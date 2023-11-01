@@ -10,6 +10,7 @@ public class LoginFlow: Flow {
     }
 
     let presentalbeView = UINavigationController()
+    private let container = StepperDI.shared
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -21,13 +22,15 @@ public class LoginFlow: Flow {
             return presentSignupView()
         case .tabsRequire:
             return .end(forwardToParentFlowWithStep: PensionStep.tabsRequire)
+        case .errorRequire:
+            return presentError(view: self.presentalbeView)
         default:
             return .none
         }
     }
 
     private func presentLoginView() -> FlowContributors {
-        let loginViewController = LoginViewController(LoginViewModel())
+        let loginViewController = LoginViewController(container.loginViewModel)
         presentalbeView.pushViewController(loginViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: loginViewController,
