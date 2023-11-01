@@ -10,7 +10,7 @@ public enum PensionStep: Step {
     case noticeRequire
     case benefitRequire
     case myPageRequire
-
+    case errorRequire
     case writeNoticeRequire
     case noticeDetailRequire
     case searchRequire
