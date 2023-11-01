@@ -15,6 +15,7 @@ public class AuthTextFieldView: UIView {
         $0.textColor = .black
         $0.layer.cornerRadius = 6
         $0.backgroundColor = .gray50
+        $0.tintColor = .blue100
         $0.addLeftPadding(size: 12)
     }
     public let secureButton = UIButton(type: .system).then {
