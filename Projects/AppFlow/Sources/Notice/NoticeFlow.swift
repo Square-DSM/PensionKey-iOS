@@ -20,8 +20,8 @@ public class NoticeFlow: Flow {
             return presentNoticeView()
         case .writeNoticeRequire:
             return presentWriteNoticeView()
-        case .noticeDetailRequire:
-            return presentNoticeDetailView()
+        case .noticeDetailRequire(let id):
+            return presentNoticeDetailView(id: id)
         case .searchRequire:
             return presentSearchView()
         default:
@@ -49,9 +49,10 @@ public class NoticeFlow: Flow {
         ))
     }
 
-    private func presentNoticeDetailView() -> FlowContributors {
+    private func presentNoticeDetailView(id: String) -> FlowContributors {
         let noticeDetailViewController = NoticeDetailViewController(container.noticeDetailViewModel)
         rootViewController.pushViewController(noticeDetailViewController, animated: true)
+        noticeDetailViewController.id = id
         return .one(flowContributor: .contribute(
             withNextPresentable: noticeDetailViewController,
             withNextStepper: noticeDetailViewController.viewModel

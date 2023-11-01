@@ -26,9 +26,15 @@ extension StepperDI {
             signupUseCase: ServiceDI.signupUseCaseInject
         )
         // MARK: Notice관련 UseCase
-        let noticeViewModel = NoticeViewModel(fetchNoticeListUseCase: ServiceDI.fetchNoticeListUseCaseInject)
-        let noticeDetailViewModel = NoticeDetailViewModel()
-        let writeNoticeViewModel = WriteNoticeViewModel(createNoticeUseCase: ServiceDI.createNoticeUseCaseInject)
+        let noticeViewModel = NoticeViewModel(
+            fetchNoticeListUseCase: ServiceDI.fetchNoticeListUseCaseInject
+        )
+        let noticeDetailViewModel = NoticeDetailViewModel(
+            fetchNoticeDetailUseCase: ServiceDI.fetchNoticeDetailUseCaseInject
+        )
+        let writeNoticeViewModel = WriteNoticeViewModel(
+            createNoticeUseCase: ServiceDI.createNoticeUseCaseInject
+        )
         let searchViewModel = SearchViewModel()
 
         return .init(
