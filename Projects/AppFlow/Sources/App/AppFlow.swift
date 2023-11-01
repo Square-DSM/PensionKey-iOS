@@ -44,7 +44,7 @@ public class AppFlow: Flow {
     private func presentTabsView() -> FlowContributors {
         let tabsFlow = TabsFlow()
         Flows.use(tabsFlow, when: .created) { [weak self] root in
-            self?.window.rootViewController = root
+            self?.window.rootViewController?.present(root, animated: true)
         }
 
         return .one(

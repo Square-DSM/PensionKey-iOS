@@ -17,13 +17,32 @@ public class LoginFlow: Flow {
         switch step {
         case .loginRequire:
             return presentLoginView()
+        case .signupRequire:
+            return presentSignupView()
+        case .tabsRequire:
+            return .end(forwardToParentFlowWithStep: PensionStep.tabsRequire)
         default:
             return .none
         }
     }
 
     private func presentLoginView() -> FlowContributors {
-//        presentalbeView.pushViewController(MyPensionViewController(), animated: false)
-        return .none
+        let loginViewController = LoginViewController(LoginViewModel())
+        presentalbeView.pushViewController(loginViewController, animated: false)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: loginViewController,
+            withNextStepper: loginViewController.viewModel
+        ))
+    }
+    
+    private func presentSignupView() -> FlowContributors {
+        let signupFlow = SignupFlow()
+        Flows.use(signupFlow, when: .created) { root in
+            self.presentalbeView.pushViewController(root, animated: true)
+        }
+        return .one(flowContributor: .contribute(
+            withNextPresentable: signupFlow,
+            withNextStepper: OneStepper(withSingleStep: PensionStep.signupRequire)
+        ))
     }
 }
