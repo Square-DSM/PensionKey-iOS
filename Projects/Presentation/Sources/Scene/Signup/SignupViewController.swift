@@ -68,7 +68,13 @@ public class SignupViewController: BaseViewController<SignupViewModel> {
         self.navigationController?.isNavigationBarHidden = true
     }
     public override func bind() {
-        let input = SignupViewModel.Input(loginButtonDidTap: loginButton.rx.tap.asSignal())
+        let input = SignupViewModel.Input(
+            nameText: nameTextField.textField.rx.text.orEmpty.asDriver(),
+            idText: idTextField.textField.rx.text.orEmpty.asDriver(),
+            passwordText: passwordTextField.textField.rx.text.orEmpty.asDriver(),
+            signupButtonDidTap: signupButton.rx.tap.asSignal(),
+            loginButtonDidTap: loginButton.rx.tap.asSignal()
+        )
         _ = viewModel.transform(input)
     }
     

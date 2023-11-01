@@ -53,6 +53,8 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
     }
     public override func bind() {
         let input = LoginViewModel.Input(
+            idText: idTextField.textField.rx.text.orEmpty.asDriver(),
+            passwordText: passwordTextField.textField.rx.text.orEmpty.asDriver(),
             singupButtonDidTap: signupButton.rx.tap.asSignal(),
             loginButotnDidTap: loginButton.rx.tap.asSignal()
         )
