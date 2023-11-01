@@ -7,6 +7,11 @@ public struct StepperDI {
 
     public let loginViewModel: LoginViewModel
     public let signupViewModel: SignupViewModel
+    
+    public let noticeViewModel: NoticeViewModel
+    public let noticeDetailViewModel: NoticeDetailViewModel
+    public let writeNoticeViewModel: WriteNoticeViewModel
+    public let searchViewModel: SearchViewModel
 }
 
 extension StepperDI {
@@ -20,10 +25,19 @@ extension StepperDI {
         let signupViewModel = SignupViewModel(
             signupUseCase: ServiceDI.signupUseCaseInject
         )
+        // MARK: Notice관련 UseCase
+        let noticeViewModel = NoticeViewModel(fetchNoticeListUseCase: ServiceDI.fetchNoticeListUseCaseInject)
+        let noticeDetailViewModel = NoticeDetailViewModel()
+        let writeNoticeViewModel = WriteNoticeViewModel(createNoticeUseCase: ServiceDI.createNoticeUseCaseInject)
+        let searchViewModel = SearchViewModel()
 
         return .init(
             loginViewModel: loginViewModel,
-            signupViewModel: signupViewModel
+            signupViewModel: signupViewModel,
+            noticeViewModel: noticeViewModel,
+            noticeDetailViewModel: noticeDetailViewModel,
+            writeNoticeViewModel: writeNoticeViewModel,
+            searchViewModel: searchViewModel
         )
     }
 }
