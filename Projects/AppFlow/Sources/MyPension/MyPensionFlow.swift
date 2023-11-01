@@ -34,11 +34,13 @@ public class MyPensionFlow: Flow {
     }
 
     private func presentMyPensionDetailView() -> FlowContributors {
-        let myPensionDetailViewController = MyPensionDetailViewController(MyPensionDetailViewModel())
-        rootViewController.pushViewController(myPensionDetailViewController, animated: true)
+        let myNationalPensionDetailViewController = MyNationalPensionDetailViewController(MyNationalPensionDetailViewModel())
+        let myPersonalPensionViewController = MyPersonalPensionViewController(MyPersonalPensionViewModel())
+        let myHousingPensionViewController = MyHousingPensionViewController(MyHousingPensionViewModel())
+        rootViewController.pushViewController(myHousingPensionViewController, animated: true)
         return .one(flowContributor: .contribute(
-            withNextPresentable: myPensionDetailViewController,
-            withNextStepper: myPensionDetailViewController.viewModel
+            withNextPresentable: myHousingPensionViewController,
+            withNextStepper: myHousingPensionViewController.viewModel
         ))
     }
 }

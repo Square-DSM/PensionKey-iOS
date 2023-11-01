@@ -17,4 +17,7 @@ public extension UIImage {
     static let xmark = PensionKeyKitAsset.Image.xmark.image
     static let trashCan = PensionKeyKitAsset.Image.trashCan.image
     static let send = PensionKeyKitAsset.Image.send.image
+    static let personalPension = PensionKeyKitAsset.Image.personalPension.image
+    static let nationalPension = PensionKeyKitAsset.Image.nationalPension.image
+    static let housingPension = PensionKeyKitAsset.Image.housingPension.image
 }
