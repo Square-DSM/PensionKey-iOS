@@ -3,6 +3,7 @@ import RxFlow
 
 public enum PensionStep: Step {
     case loginRequire
+    case signupRequire
     case tabsRequire
     case myPensionRequire
     case myPensionDetailRequire
