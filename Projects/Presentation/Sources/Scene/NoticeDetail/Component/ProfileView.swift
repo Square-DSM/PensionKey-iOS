@@ -17,9 +17,11 @@ public class ProfileView: UIView {
         $0.textColor = .gray500
         $0.font = .bodySmall
     }
+
     public let moreButton = UIButton(type: .system).then {
         $0.setImage(.init(cgImage: (UIImage(systemName: "ellipsis")?.cgImage)!, scale: 2, orientation: .right), for: .normal)
         $0.tintColor = .black
+        $0.showsMenuAsPrimaryAction = true
     }
     public override func layoutSubviews() {
         [

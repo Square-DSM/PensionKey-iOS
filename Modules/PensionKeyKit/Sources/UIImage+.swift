@@ -15,5 +15,6 @@ public extension UIImage {
     static let chat = PensionKeyKitAsset.Image.chat.image
     static let eye = PensionKeyKitAsset.Image.eye.image
     static let xmark = PensionKeyKitAsset.Image.xmark.image
+    static let trashCan = PensionKeyKitAsset.Image.trashCan.image
     static let send = PensionKeyKitAsset.Image.send.image
 }
