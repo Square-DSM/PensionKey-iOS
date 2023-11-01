@@ -10,6 +10,7 @@ public class NoticeFlow: Flow {
     }
 
     let rootViewController = BaseNavigationController()
+    private let container = StepperDI.shared
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -29,7 +30,7 @@ public class NoticeFlow: Flow {
     }
 
     private func presentNoticeView() -> FlowContributors {
-        let noticeViewController = NoticeViewController(NoticeViewModel())
+        let noticeViewController = NoticeViewController(container.noticeViewModel)
         rootViewController.pushViewController(noticeViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: noticeViewController,
@@ -38,16 +39,18 @@ public class NoticeFlow: Flow {
     }
 
     private func presentWriteNoticeView() -> FlowContributors {
-        let writeNoticeViewController = WriteNoticeViewController(WriteNoticeViewModel())
-        rootViewController.pushViewController(writeNoticeViewController, animated: true)
+        let writeNoticeFlow = WriteNoticeFlow()
+        Flows.use(writeNoticeFlow, when: .created) { root in
+            self.rootViewController.pushViewController(root, animated: true)
+        }
         return .one(flowContributor: .contribute(
-            withNextPresentable: writeNoticeViewController,
-            withNextStepper: writeNoticeViewController.viewModel
+            withNextPresentable: writeNoticeFlow,
+            withNextStepper: OneStepper(withSingleStep: PensionStep.writeNoticeRequire)
         ))
     }
 
     private func presentNoticeDetailView() -> FlowContributors {
-        let noticeDetailViewController = NoticeDetailViewController(NoticeDetailViewModel())
+        let noticeDetailViewController = NoticeDetailViewController(container.noticeDetailViewModel)
         rootViewController.pushViewController(noticeDetailViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: noticeDetailViewController,
@@ -56,7 +59,7 @@ public class NoticeFlow: Flow {
     }
 
     private func presentSearchView() -> FlowContributors {
-        let searchViewController = SearchViewController(SearchViewModel())
+        let searchViewController = SearchViewController(container.searchViewModel)
         rootViewController.pushViewController(searchViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: searchViewController,
