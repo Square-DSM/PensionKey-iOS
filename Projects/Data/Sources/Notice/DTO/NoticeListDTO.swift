@@ -7,13 +7,14 @@ struct NoticeDTO: Decodable {
         case id
         case createdAt = "created_at"
         case userAccountId = "user_account_id"
+        case commentCount = "comment_count"
     }
     let id: String
     let title: String
     let createdAt: String
     let userAccountId: String
+    let commentCount: Int
 }
-//typealias NoticeListDTO: [NoticeDTO]
 
 struct NoticeListDTO: Decodable {
     enum CodingKeys: String, CodingKey {
@@ -29,7 +30,8 @@ extension NoticeListDTO {
                 id: $0.id,
                 title: $0.title,
                 createdAt: $0.createdAt,
-                userAccountId: $0.userAccountId
+                userAccountId: $0.userAccountId,
+                commentCount: $0.commentCount
             )
         }
     }
