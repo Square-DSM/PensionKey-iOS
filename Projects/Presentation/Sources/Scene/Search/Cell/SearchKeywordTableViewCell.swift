@@ -14,7 +14,7 @@ class SearchKeywordTableViewCell: UITableViewCell {
     }
 
     private let deleteButton = UIButton(type: .system).then {
-        $0.setImage(.xmark, for: .normal)
+//        $0.setImage(.xmark, for: .normal)
         $0.tintColor = .gray600
     }
 
