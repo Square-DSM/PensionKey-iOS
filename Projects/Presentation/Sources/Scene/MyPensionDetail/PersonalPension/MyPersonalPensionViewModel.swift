@@ -4,7 +4,7 @@ import RxSwift
 import RxCocoa
 import RxFlow
 
-public class MyPensionDetailViewModel: BaseViewModel, Stepper {
+public class MyPersonalPensionViewModel: BaseViewModel, Stepper {
     public var steps = PublishRelay<Step>()
     private let disposeBag = DisposeBag()
 
