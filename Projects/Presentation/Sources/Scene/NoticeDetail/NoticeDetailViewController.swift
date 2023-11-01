@@ -8,7 +8,8 @@ import PensionKeyKit
 import Core
 
 public class NoticeDetailViewController: BaseViewController<NoticeDetailViewModel> {
-
+    public var id: String = ""
+    private let viewAppear = PublishRelay<Void>()
     private let editPostRelay = PublishRelay<Void>()
     private let deletePostRelay = PublishRelay<Void>()
 
@@ -40,14 +41,28 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
     public override func attribute() {
         settingAlertAndMenu()
     }
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.viewAppear.accept(())
+    }
 
     public override func bind() {
         let input = NoticeDetailViewModel.Input(
+            id: id,
+            viewAppear: viewAppear.asSignal(),
             deletePostButtonDidClick: deletePostRelay.asSignal(),
             editPostButtonDidClick: editPostRelay.asSignal()
         )
 
-        _ = viewModel.transform(input)
+        let output = viewModel.transform(input)
+        output.noticeDetailData.asObservable()
+            .bind(onNext: { [self] in
+                titleLabel.text = $0.title
+                contentLabel.text = $0.content
+                profileView.idLabel.text = $0.userAccountId
+                profileView.dateLabel.text = $0.createdAt
+                commentView.setTableView(commentList: $0.commentList)
+            }).disposed(by: disposeBag)
     }
 
     public override func addView() {
