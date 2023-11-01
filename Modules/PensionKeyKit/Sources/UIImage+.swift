@@ -14,4 +14,5 @@ public extension UIImage {
     static let pencil = PensionKeyKitAsset.Image.pencil.image
     static let chat = PensionKeyKitAsset.Image.chat.image
     static let xmark = PensionKeyKitAsset.Image.xmark.image
+    static let send = PensionKeyKitAsset.Image.send.image
 }
