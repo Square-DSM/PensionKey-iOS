@@ -11,6 +11,8 @@ public class TabsFlow: Flow {
     }
     
     private let rootViewController = UITabBarController().then {
+        $0.modalPresentationStyle = .fullScreen
+        $0.modalTransitionStyle = .crossDissolve
         $0.tabBar.tintColor = .yellow800
         $0.tabBar.unselectedItemTintColor = .gray400
         $0.tabBar.backgroundColor = .white
