@@ -26,6 +26,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
         $0.searchBar.tintColor = .yellow500
         $0.searchBar.searchTextField.font = .bodyMedium
         $0.searchBar.showsCancelButton = false
+        $0.hidesNavigationBarDuringPresentation = false
     }
 
     // MARK: Search Keyword
