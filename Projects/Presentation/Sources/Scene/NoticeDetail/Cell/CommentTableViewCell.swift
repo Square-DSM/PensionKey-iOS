@@ -6,7 +6,7 @@ import PensionKeyKit
 class CommentTableViewCell: UITableViewCell {
     static let identifier = "NoticeTableViewCell"
     let commentImageView = UIImageView().then {
-        $0.image = .add
+        $0.image = .logoDark
         $0.layer.cornerRadius = 20
         $0.clipsToBounds = true
     }
@@ -20,12 +20,19 @@ class CommentTableViewCell: UITableViewCell {
         $0.font = .bodySmall
         $0.textColor = .gray500
     }
-    
-    func setUp() {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         addView()
         setLayout()
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+//    func setUp() {
+//        self.selectionStyle = .none
+//    }
     private func addView() {
         [
             commentImageView,

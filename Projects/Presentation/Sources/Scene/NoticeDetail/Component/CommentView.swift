@@ -7,7 +7,6 @@ import Domain
 import PensionKeyKit
 
 public class CommentView: UIView {
-    let commentList = BehaviorRelay<[CommentEntity]>(value: [])
     private let disposeBag = DisposeBag()
     private let titleLabel = UILabel().then {
         $0.text = "댓글"
@@ -39,22 +38,11 @@ public class CommentView: UIView {
         $0.isScrollEnabled = false
         $0.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         $0.showsVerticalScrollIndicator = false
-        $0.separatorStyle = .none
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        commentList.asObservable()
-            .bind(to: commentTableView.rx.items(
-                cellIdentifier: CommentTableViewCell.identifier,
-                cellType: CommentTableViewCell.self
-            )) { row, item, cell in
-                cell.commentLabel.text = item.content
-                cell.idAndDateLabel.text = "\(item.userAccountId) · "
-            }.disposed(by: disposeBag)
-    }
-    public func setTableView(commentList: [CommentEntity]) {
-        self.commentList.accept(commentList)
+        commentTableView.dataSource = self
     }
 
     required init?(coder: NSCoder) {
@@ -101,19 +89,18 @@ public class CommentView: UIView {
     }
 }
 
-//extension CommentView: UITableViewDataSource {
-//    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 15
-//    }
-//
-//    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(
-//            withIdentifier: CommentTableViewCell.identifier,
-//            for: indexPath
-//        ) as? CommentTableViewCell else {
-//            return UITableViewCell()
-//        }
-//        cell.setUp()
-//        return cell
-//    }
-//}
+extension CommentView: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: CommentTableViewCell.identifier,
+            for: indexPath
+        ) as? CommentTableViewCell else {
+            return UITableViewCell()
+        }
+        return cell
+    }
+}

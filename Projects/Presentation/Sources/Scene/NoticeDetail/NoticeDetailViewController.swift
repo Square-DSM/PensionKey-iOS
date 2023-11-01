@@ -6,6 +6,7 @@ import RxCocoa
 import RxFlow
 import PensionKeyKit
 import Core
+import Domain
 
 public class NoticeDetailViewController: BaseViewController<NoticeDetailViewModel> {
     public var id: String = ""
@@ -61,7 +62,6 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
                 contentLabel.text = $0.content
                 profileView.idLabel.text = $0.userAccountId
                 profileView.dateLabel.text = $0.createdAt
-                commentView.setTableView(commentList: $0.commentList)
             }).disposed(by: disposeBag)
     }
 

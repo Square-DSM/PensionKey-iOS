@@ -30,8 +30,7 @@ public class NoticeDetailViewModel: BaseViewModel, Stepper {
             title: "",
             content: "",
             createdAt: "",
-            userAccountId: "",
-            commentList: []
+            userAccountId: ""
         ))
         input.deletePostButtonDidClick.asObservable()
             .subscribe(onNext: {
