@@ -49,12 +49,12 @@ public class TokenStorage {
         case .accessToken:
             return [
                 "content-type": "application/json",
-                "Authorization": accessToken
+                "Authorization": "Bearer \(accessToken)"
             ]
         case .refreshToken:
             return [
                 "content-type": "application/json",
-                "refresh": refreshToken
+                "refresh": "Bearer \(refreshToken)"
             ]
         case .tokenIsEmpty:
             return ["content-type": "application/json"]
