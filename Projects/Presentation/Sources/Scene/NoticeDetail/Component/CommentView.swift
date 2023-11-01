@@ -1,9 +1,13 @@
 import UIKit
 import Then
 import SnapKit
+import RxSwift
+import RxCocoa
+import Domain
 import PensionKeyKit
 
 public class CommentView: UIView {
+    private let disposeBag = DisposeBag()
     private let titleLabel = UILabel().then {
         $0.text = "댓글"
         $0.font = .titleSmall
@@ -34,12 +38,11 @@ public class CommentView: UIView {
         $0.isScrollEnabled = false
         $0.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         $0.showsVerticalScrollIndicator = false
-        $0.separatorStyle = .none
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.commentTableView.dataSource = self
+        commentTableView.dataSource = self
     }
 
     required init?(coder: NSCoder) {
@@ -88,7 +91,7 @@ public class CommentView: UIView {
 
 extension CommentView: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 15
+        return 3
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -98,7 +101,6 @@ extension CommentView: UITableViewDataSource {
         ) as? CommentTableViewCell else {
             return UITableViewCell()
         }
-        cell.setUp()
         return cell
     }
 }

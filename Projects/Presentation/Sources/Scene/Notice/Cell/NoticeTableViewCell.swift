@@ -5,6 +5,7 @@ import PensionKeyKit
 
 class NoticeTableViewCell: UITableViewCell {
     static let identifier = "NoticeTableViewCell"
+    var id = ""
     let titleLabel = UILabel().then {
         $0.text = "기초생활 수급자도 국민연금에 가입할 수 있나요?"
         $0.font = .bodyLarge

@@ -12,6 +12,6 @@ public enum PensionStep: Step {
     case myPageRequire
     case errorRequire
     case writeNoticeRequire
-    case noticeDetailRequire
+    case noticeDetailRequire(id: String)
     case searchRequire
 }

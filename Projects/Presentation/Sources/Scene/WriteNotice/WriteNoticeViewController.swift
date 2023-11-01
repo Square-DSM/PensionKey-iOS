@@ -47,9 +47,9 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
 
     public override func bind() {
         let input = WriteNoticeViewModel.Input(
-            registerButtonSignal: registerNotice.asSignal(),
-            titleDriber: titleTextField.rx.text.orEmpty.asDriver(),
-            contentsDriber: contentTextView.rx.text.orEmpty.asDriver()
+            registerButtonSignal: registrationButton.rx.tap.asSignal(),
+            titleText: titleTextField.rx.text.orEmpty.asDriver(),
+            contentText: contentTextView.rx.text.orEmpty.asDriver()
         )
 
         let output = viewModel.transform(input)
@@ -86,13 +86,13 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
                 }
             }).disposed(by: disposeBag)
 
-        bottomRegisterButton.rx.tap
-            .bind(to: registerNotice)
-            .disposed(by: disposeBag)
-
-        registrationButton.rx.tap
-            .bind(to: registerNotice)
-            .disposed(by: disposeBag)
+//        bottomRegisterButton.rx.tap
+//            .bind(to: registerNotice)
+//            .disposed(by: disposeBag)
+//
+//        registrationButton.rx.tap
+//            .bind(to: registerNotice)
+//            .disposed(by: disposeBag)
     }
 
     private func setNavigationBar() {

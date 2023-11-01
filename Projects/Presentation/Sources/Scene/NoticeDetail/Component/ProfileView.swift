@@ -5,7 +5,9 @@ import PensionKeyKit
 
 public class ProfileView: UIView {
     public let profileImageView = UIImageView().then {
-        $0.image = .chat
+        $0.image = .logoDark
+        $0.layer.cornerRadius = 20
+        $0.clipsToBounds = true
     }
     public let idLabel = UILabel().then {
         $0.text = "park01"
