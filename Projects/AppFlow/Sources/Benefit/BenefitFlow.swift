@@ -9,7 +9,9 @@ public class BenefitFlow: Flow {
         return rootViewController
     }
 
-    let rootViewController = BaseNavigationController()
+    let rootViewController = BaseNavigationController().then {
+        $0.navigationBar.isHidden = true
+    }
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }

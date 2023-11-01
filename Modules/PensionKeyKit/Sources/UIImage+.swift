@@ -6,6 +6,7 @@ public extension UIImage {
     static let bulletinBoard = PensionKeyKitAsset.Image.bulletinBoard.image
     static let account = PensionKeyKitAsset.Image.account.image
     static let logo = PensionKeyKitAsset.Image.logo.image
+    static let logoDark = PensionKeyKitAsset.Image.logoDark.image
 
     // MARK: ICON
     static let manWithXmark = PensionKeyKitAsset.Image.manWithXmakr.image

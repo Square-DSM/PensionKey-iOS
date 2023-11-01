@@ -32,6 +32,7 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
     }
 
     private let profileImageView = UIImageView().then {
+        $0.image = .logoDark
         $0.backgroundColor = .gray50
         $0.layer.cornerRadius = 50
         $0.contentMode = .scaleToFill
