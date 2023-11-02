@@ -158,14 +158,15 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
 
     public override func bind() {
         let input = SearchViewModel.Input(
+            searchResultTableViewCellDidTap: searchResultTableView.rx.itemSelected.asControlEvent(), 
             viewAppear: viewAppear.asSignal(),
             keywordText: self.searchController.searchBar.searchTextField.rx.text.orEmpty.asDriver()
         )
         let output = viewModel.transform(input)
+
         output.noticeList
             .do(onNext: {
                 self.searchResultNumberLabel.text = "\($0.count)"
-                self.viewAppear.accept(())
             })
             .bind(to: searchResultTableView.rx.items(cellIdentifier: NoticeTableViewCell.identifier, cellType: NoticeTableViewCell.self)) { (index, element, cell) in
             cell.titleLabel.text = element.title
@@ -175,6 +176,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
             cell.selectionStyle = .none
             cell.setUp()
         }.disposed(by: disposeBag)
+
         output.keywordList
             .bind(to: searchKeywordTableView.rx.items(cellIdentifier: SearchKeywordTableViewCell.identifier, cellType: SearchKeywordTableViewCell.self)) { (index, element, cell) in
                 cell.keywordLabel.text = element.keyword
@@ -198,6 +200,8 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
                 self?.resultEmptyLabel.text = emptyText
             }
             .disposed(by: disposeBag)
+
+        
 
         searchKeywordTableView.rx.itemSelected
             .map { index -> String? in

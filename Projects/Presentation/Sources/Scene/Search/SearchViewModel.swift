@@ -20,6 +20,7 @@ public class SearchViewModel: BaseViewModel, Stepper {
     }
 
     public struct Input {
+        let searchResultTableViewCellDidTap: ControlEvent<IndexPath>
         let viewAppear: Signal<Void>
         let keywordText: Driver<String>
     }
@@ -31,14 +32,26 @@ public class SearchViewModel: BaseViewModel, Stepper {
     public func transform(_ input: Input) -> Output {
         let noticeList = BehaviorRelay<[NoticeEntity]>(value: [])
         let keywordList = BehaviorRelay<[SearchKeyEntity]>(value: [])
+        input.searchResultTableViewCellDidTap.asObservable()
+            .map { PensionStep.noticeDetailRequire(id: noticeList.value[$0.row].id) }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+
         input.keywordText.asObservable()
-            .filter { !$0.isEmpty }
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .filter { !$0.isEmpty }
             .flatMap { self.searchNoticeListUseCase.execute(keyword: $0) }
             .bind(to: noticeList)
             .disposed(by: disposeBag)
+
         input.viewAppear.asObservable()
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .withLatestFrom(input.keywordText)
+            .filter { !$0.isEmpty }
+            .flatMap { self.searchNoticeListUseCase.execute(keyword: $0) }
+            .bind(to: noticeList)
+            .disposed(by: disposeBag)
+
+        input.viewAppear.asObservable()
             .flatMap { self.searchKeyListUseCase.execute() }
             .map {
                 var removedArray = [SearchKeyEntity]()
@@ -52,6 +65,9 @@ public class SearchViewModel: BaseViewModel, Stepper {
             .bind(to: keywordList)
             .disposed(by: disposeBag)
         
-        return Output(noticeList: noticeList, keywordList: keywordList)
+        return Output(
+            noticeList: noticeList,
+            keywordList: keywordList
+        )
     }
 }
