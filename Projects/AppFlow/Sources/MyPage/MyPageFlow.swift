@@ -10,6 +10,7 @@ public class MyPageFlow: Flow {
     }
 
     let rootViewController = BaseNavigationController()
+    private let container = StepperDI.shared
 
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
@@ -23,7 +24,7 @@ public class MyPageFlow: Flow {
     }
 
     private func presentMyPageView() -> FlowContributors {
-        let myPageViewController = MyPageViewController(MyPageViewModel())
+        let myPageViewController = MyPageViewController(container.myPageViewModel)
         rootViewController.pushViewController(myPageViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: myPageViewController,

@@ -17,15 +17,16 @@ public class TabsFlow: Flow {
         $0.tabBar.unselectedItemTintColor = .gray400
         $0.tabBar.backgroundColor = .white
         $0.tabBar.layer.cornerRadius = 12
-        let shadowView = UIView().then {
+        $0.tabBar.backgroundImage = UIImage()
+        let topPaddingView = UIView().then {
             $0.backgroundColor = .white
             $0.layer.cornerRadius = 12
             $0.layer.borderColor = UIColor.gray50.cgColor
             $0.layer.borderWidth = 2
             $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
-        $0.tabBar.addSubview(shadowView)
-        shadowView.snp.makeConstraints {
+        $0.tabBar.addSubview(topPaddingView)
+        topPaddingView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(-6)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(100)

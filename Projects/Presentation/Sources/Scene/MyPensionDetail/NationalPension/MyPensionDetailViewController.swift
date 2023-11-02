@@ -118,7 +118,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
         output.detailData.asObservable()
             .subscribe(onNext: {
-                self.pensionPriceLabel.text = $0.expectTotalPay
+                print($0)
             })
             .disposed(by: disposeBag)
     }

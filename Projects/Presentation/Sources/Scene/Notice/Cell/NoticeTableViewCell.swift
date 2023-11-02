@@ -19,9 +19,6 @@ class NoticeTableViewCell: UITableViewCell {
     let commentStateView = CommentStateView().then {
         $0.commentStateLabel.text = "3"
     }
-    let commentImageView = UIImageView().then {
-        $0.image = .logo
-    }
     func setUp() {
         addView()
         setLayout()
@@ -30,19 +27,18 @@ class NoticeTableViewCell: UITableViewCell {
         [
             titleLabel,
             idAndDateLabel,
-            commentStateView,
-            commentImageView
+            commentStateView
         ].forEach { self.addSubview($0) }
     }
     private func setLayout() {
         titleLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.top.equalToSuperview().inset(16)
-            $0.trailing.equalTo(commentImageView.snp.leading).offset(-12)
+            $0.trailing.equalToSuperview()
         }
         idAndDateLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-            $0.trailing.equalTo(commentImageView.snp.leading).offset(-12)
+            $0.trailing.equalToSuperview()
             $0.leading.equalToSuperview()
         }
         commentStateView.snp.makeConstraints {
@@ -50,11 +46,6 @@ class NoticeTableViewCell: UITableViewCell {
             $0.leading.equalToSuperview()
             $0.height.equalTo(18)
             $0.bottom.equalToSuperview().inset(16)
-        }
-        commentImageView.snp.makeConstraints {
-            $0.width.height.equalTo(80)
-            $0.top.equalToSuperview().inset(16)
-            $0.trailing.equalToSuperview()
         }
     }
 }

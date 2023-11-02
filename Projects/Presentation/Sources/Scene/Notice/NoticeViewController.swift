@@ -51,7 +51,7 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
                 cellType: NoticeTableViewCell.self
             )) { row, item, cell in
                 cell.titleLabel.text = item.title
-                cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt)"
+                cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt.getTimeAgoAsKoreanString())"
                 cell.commentStateView.commentStateLabel.text = "\(item.commentCount)"
                 cell.id = item.id
                 cell.selectionStyle = .none

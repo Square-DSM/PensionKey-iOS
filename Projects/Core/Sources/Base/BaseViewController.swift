@@ -15,10 +15,13 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        addView()
-        setLayout()
         attribute()
         bind()
+    }
+    open override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        addView()
+        setLayout()
     }
 
     open func addView() { }

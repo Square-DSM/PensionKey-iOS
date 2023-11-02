@@ -1,5 +1,6 @@
 import Foundation
 import Domain
+import Core
 
 struct NoticeDTO: Decodable {
     enum CodingKeys: String, CodingKey {
@@ -29,7 +30,7 @@ extension NoticeListDTO {
             NoticeEntity.init(
                 id: $0.id,
                 title: $0.title,
-                createdAt: $0.createdAt,
+                createdAt: $0.createdAt.toDate(format: .fullDateWithTime),
                 userAccountId: $0.userAccountId,
                 commentCount: $0.commentCount
             )

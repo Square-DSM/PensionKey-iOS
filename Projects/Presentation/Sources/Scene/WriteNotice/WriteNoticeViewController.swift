@@ -17,8 +17,8 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
     }
     private let registrationButton = UIButton(type: .system).then {
         $0.setTitle("등록", for: .normal)
-        $0.setTitleColor(.yellow700, for: .normal)
-        $0.backgroundColor = .yellow100
+        $0.setTitleColor(.gray700, for: .normal)
+        $0.backgroundColor = .gray100
         $0.layer.cornerRadius = 6
         $0.frame = .init(x: 0, y: 0, width: 41, height: 26)
     }
@@ -43,11 +43,12 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
     private let bottomRegisterButton = UIButton(type: .system).then {
         $0.setImage(.send, for: .normal)
         $0.tintColor = .yellow500
+        $0.isEnabled = false
     }
 
     public override func bind() {
         let input = WriteNoticeViewModel.Input(
-            registerButtonSignal: registrationButton.rx.tap.asSignal(),
+            registerButtonSignal: registerNotice.asSignal(),
             titleText: titleTextField.rx.text.orEmpty.asDriver(),
             contentText: contentTextView.rx.text.orEmpty.asDriver()
         )
@@ -58,6 +59,13 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
             .emit(
                 with: self,
                 onNext: { owner, isAble in
+                    if isAble {
+                        owner.registrationButton.setTitleColor(.yellow700, for: .normal)
+                        owner.registrationButton.backgroundColor = .yellow100
+                    } else {
+                        owner.registrationButton.setTitleColor(.gray700, for: .normal)
+                        owner.registrationButton.backgroundColor = .gray100
+                    }
                     owner.registrationButton.isEnabled = isAble
                     owner.bottomRegisterButton.isEnabled = isAble
                 }
@@ -86,13 +94,13 @@ public class WriteNoticeViewController: BaseViewController<WriteNoticeViewModel>
                 }
             }).disposed(by: disposeBag)
 
-//        bottomRegisterButton.rx.tap
-//            .bind(to: registerNotice)
-//            .disposed(by: disposeBag)
-//
-//        registrationButton.rx.tap
-//            .bind(to: registerNotice)
-//            .disposed(by: disposeBag)
+        bottomRegisterButton.rx.tap
+            .bind(to: registerNotice)
+            .disposed(by: disposeBag)
+
+        registrationButton.rx.tap
+            .bind(to: registerNotice)
+            .disposed(by: disposeBag)
     }
 
     private func setNavigationBar() {

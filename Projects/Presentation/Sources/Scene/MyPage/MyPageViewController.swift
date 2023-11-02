@@ -9,6 +9,8 @@ import Core
 
 public class MyPageViewController: BaseViewController<MyPageViewModel> {
 
+    private let viewDidLoadRelay = PublishRelay<Void>()
+
     private let navigationTitleLable = UILabel().then {
         $0.text = "마이페이지"
         $0.textColor = .black
@@ -122,8 +124,28 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
         $0.contentHorizontalAlignment = .left
     }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        viewDidLoadRelay.accept(())
+    }
+
     public override func attribute() {
         self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(customView: navigationTitleLable)
+    }
+
+    public override func bind() {
+        let input = MyPageViewModel.Input(viewDidLoad: viewDidLoadRelay.asSignal())
+        let output = viewModel.transform(input)
+
+        output.UserInfoData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, info in
+                    owner.userNameLabel.text = info.name
+                    owner.userIdLabel.text = info.accountId
+            }, onError: { owner, err in
+                print(err)
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: AddView
