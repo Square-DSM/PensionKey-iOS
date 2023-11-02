@@ -30,9 +30,6 @@ class CommentTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-//    func setUp() {
-//        self.selectionStyle = .none
-//    }
     private func addView() {
         [
             commentImageView,

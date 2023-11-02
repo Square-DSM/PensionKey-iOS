@@ -8,17 +8,17 @@ import PensionKeyKit
 
 public class CommentView: UIView {
     private let disposeBag = DisposeBag()
-    private let titleLabel = UILabel().then {
+    private let commentTitleLabel = UILabel().then {
         $0.text = "댓글"
         $0.font = .titleSmall
         $0.textColor = .black
     }
-    private let countLabel = UILabel().then {
+    let countLabel = UILabel().then {
         $0.text = "0"
         $0.font = .titleSmall
         $0.textColor = .yellow500
     }
-    private let commentTextField = UITextField().then {
+    let commentTextField = UITextField().then {
         $0.addLeftPadding(size: 12)
         $0.addRightPadding(size: 12)
         $0.layer.borderWidth = 1
@@ -27,10 +27,10 @@ public class CommentView: UIView {
         $0.placeholder = "댓글을 작성해보세요."
         $0.font = .bodyMedium
     }
-    private let registerButton = UIButton(type: .system).then {
+    let registerButton = UIButton(type: .system).then {
         $0.setTitle("등록", for: .normal)
         $0.setTitleColor(.yellow700, for: .normal)
-        $0.backgroundColor = .yellow100
+        $0.backgroundColor = .gray50
         $0.layer.cornerRadius = 6
     }
     public let commentTableView = UITableView().then {
@@ -38,69 +38,55 @@ public class CommentView: UIView {
         $0.isScrollEnabled = false
         $0.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         $0.showsVerticalScrollIndicator = false
+        $0.separatorStyle = .none
+    }
+    public override func layoutSubviews() {
+        [
+            commentTitleLabel,
+            countLabel,
+            commentTextField,
+            registerButton,
+            commentTableView
+        ].forEach { self.addSubview($0) }
+        commentTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview().inset(20)
+        }
+        countLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalTo(commentTitleLabel.snp.trailing).offset(8)
+        }
+        commentTextField.snp.makeConstraints {
+            $0.top.equalTo(commentTitleLabel.snp.bottom).offset(12)
+            $0.leading.equalToSuperview().inset(20)
+            $0.trailing.equalTo(registerButton.snp.leading).offset(-8)
+            $0.height.equalTo(38)
+        }
+        registerButton.snp.makeConstraints {
+            $0.top.equalTo(commentTitleLabel.snp.bottom).offset(12)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo(64)
+            $0.height.equalTo(38)
+        }
+        UIView.animate(withDuration: 0.5) { [self] in
+            commentTableView.snp.updateConstraints {
+                $0.top.equalTo(commentTextField.snp.bottom).offset(20)
+                $0.leading.trailing.equalToSuperview().inset(20)
+                $0.height.greaterThanOrEqualTo(commentTableView.numberOfRows(inSection: 0) * 56)
+            }
+        }
+        self.snp.makeConstraints {
+            $0.top.equalTo(commentTitleLabel.snp.top)
+            $0.bottom.equalTo(commentTableView.snp.bottom)
+        }
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        commentTableView.dataSource = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func layoutSubviews() {
-        [
-            titleLabel,
-            countLabel,
-            commentTextField,
-            registerButton,
-            commentTableView
-        ].forEach { self.addSubview($0) }
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24)
-            $0.leading.equalToSuperview().inset(20)
-        }
-        countLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24)
-            $0.leading.equalTo(titleLabel.snp.trailing).offset(8)
-        }
-        commentTextField.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
-            $0.leading.equalToSuperview().inset(20)
-            $0.trailing.equalTo(registerButton.snp.leading).offset(-8)
-            $0.height.equalTo(38)
-        }
-        registerButton.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(64)
-            $0.height.equalTo(38)
-        }
-        commentTableView.snp.makeConstraints {
-            $0.top.equalTo(commentTextField.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(commentTableView.numberOfRows(inSection: 0) * 56)
-        }
-        self.snp.makeConstraints {
-            $0.top.equalTo(titleLabel).offset(-24)
-            $0.bottom.equalTo(commentTableView).offset(32)
-        }
-    }
-}
-
-extension CommentView: UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CommentTableViewCell.identifier,
-            for: indexPath
-        ) as? CommentTableViewCell else {
-            return UITableViewCell()
-        }
-        return cell
-    }
 }
