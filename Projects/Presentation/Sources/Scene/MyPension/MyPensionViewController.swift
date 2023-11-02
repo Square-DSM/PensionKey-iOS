@@ -9,6 +9,20 @@ import Core
 
 public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
 
+    private let viewDidLoadRelay = PublishRelay<Void>()
+    private var totalPension: Int = 0 {
+        didSet {
+            self.totalMoneyLabel.text = "\(totalPension)원"
+        }
+    }
+
+    private let scrollView = UIScrollView().then {
+        $0.showsVerticalScrollIndicator = false
+        $0.bounces = false
+    }
+    private let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     private let logoImageView = UIImageView().then {
         $0.image = .logo
     }
@@ -31,7 +45,7 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         $0.font = .bodySmall
     }
     private let totalMoneyLabel = UILabel().then {
-        $0.text = "600,000원"
+        $0.text = "-원"
         $0.font = .titleLarge
         $0.textColor = .black
     }
@@ -46,10 +60,12 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 8.0
         layout.minimumInteritemSpacing = 0.0
+        layout.itemSize = CGSize(width: view.frame.width - 40, height: 128)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.collectionViewLayout = layout
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         collectionView.register(MyNationalPensionCollectionViewCell.self, forCellWithReuseIdentifier: MyNationalPensionCollectionViewCell.identifier)
         return collectionView
     }()
@@ -59,10 +75,12 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 8.0
         layout.minimumInteritemSpacing = 0.0
+        layout.itemSize = CGSize(width: view.frame.width - 40, height: 146)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.collectionViewLayout = layout
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         collectionView.register(MyPersonalPensionColletionCell.self, forCellWithReuseIdentifier: MyPersonalPensionColletionCell.identifier)
         return collectionView
     }()
@@ -72,32 +90,65 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 8.0
         layout.minimumInteritemSpacing = 0.0
+        layout.itemSize = CGSize(width: view.frame.width - 40, height: 128)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.collectionViewLayout = layout
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         collectionView.register(MyHousingPensionColletionCell.self, forCellWithReuseIdentifier: MyHousingPensionColletionCell.identifier)
         return collectionView
     }()
 
+    public override func viewWillAppear(_ animated: Bool) {
+        viewDidLoadRelay.accept(())
+    }
+
     public override func attribute() {
-        nationalPensionColletionView.delegate = self
-        nationalPensionColletionView.dataSource = self
-        personalPensionColletionView.delegate = self
-        personalPensionColletionView.dataSource = self
-        housingPensionColletionView.delegate = self
-        housingPensionColletionView.dataSource = self
+        
     }
 
     public override func bind() {
         let input = MyPensionViewModel.Input(
             isSelectedNationalCell: nationalPensionColletionView.rx.itemSelected,
             isSelectedPersonalCell: personalPensionColletionView.rx.itemSelected,
-            isSelectedHousingCell: housingPensionColletionView.rx.itemSelected
+            isSelectedHousingCell: housingPensionColletionView.rx.itemSelected,
+            viewDidLoad: viewDidLoadRelay.asObservable()
         )
+        let output = viewModel.transform(input)
 
+        output.nationalData.asObservable()
+            .bind(to: nationalPensionColletionView.rx.items(
+                cellIdentifier: MyNationalPensionCollectionViewCell.identifier,
+                cellType: MyNationalPensionCollectionViewCell.self
+            )) { (row, element, cell) in
+                cell.contentLabel.text = "\(element.payMonth)개월 동안 납부했어요"
+                cell.pensionLabel.text = "\(element.expectTotalPay)원"
+                self.totalPension += element.expectTotalPay
+            }
+            .disposed(by: disposeBag)
         
-        _ = viewModel.transform(input)
+        output.personalData.asObservable()
+            .bind(to: personalPensionColletionView.rx.items(
+                cellIdentifier: MyPersonalPensionColletionCell.identifier,
+                cellType: MyPersonalPensionColletionCell.self
+            )) { (row, element, cell) in
+                cell.contentLabel.text = "\(element.companyName) •\n\(element.productName)"
+                cell.pensionLabel.text = "\(element.totalPaymentAmt)원"
+                self.totalPension += element.totalPaymentAmt
+            }
+            .disposed(by: disposeBag)
+
+        output.housingData.asObservable()
+            .bind(to: housingPensionColletionView.rx.items(
+                cellIdentifier: MyHousingPensionColletionCell.identifier,
+                cellType: MyHousingPensionColletionCell.self
+            )) { (row, element, cell) in
+                cell.contentLabel.text = "\(element.pensionEndDate) 까지 • \(element.paymentType)결제"
+                cell.pensionLabel.text = "\(element.expectPension)원"
+                self.totalPension += element.expectPension
+            }
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -108,11 +159,16 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
             nameInfoLabel,
             totalMoneyLabel,
             moneyInfoLabel,
+            scrollView
+        ].forEach { self.view.addSubview($0) }
+        scrollView.addSubview(contentView)
+        [
             nationalPensionColletionView,
             personalPensionColletionView,
             housingPensionColletionView
-        ].forEach { self.view.addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
     }
+
     public override func setLayout() {
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(61)
@@ -139,60 +195,30 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
             $0.leading.equalToSuperview().inset(20)
             $0.top.equalTo(totalMoneyLabel.snp.bottom).offset(8)
         }
-        nationalPensionColletionView.snp.makeConstraints {
+
+        scrollView.snp.makeConstraints {
             $0.top.equalTo(moneyInfoLabel.snp.bottom).offset(32)
+            $0.width.bottom.equalToSuperview()
+        }
+        contentView.snp.makeConstraints {
+            $0.top.width.equalToSuperview()
+            $0.bottom.greaterThanOrEqualToSuperview()
+            $0.bottom.equalTo(housingPensionColletionView.snp.bottom).offset(20)
+        }
+        nationalPensionColletionView.snp.makeConstraints {
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(130)
+            $0.height.equalTo(128)
         }
         personalPensionColletionView.snp.makeConstraints {
             $0.top.equalTo(nationalPensionColletionView.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(150)
+            $0.height.equalTo(150 * 3)
         }
         housingPensionColletionView.snp.makeConstraints {
             $0.top.equalTo(personalPensionColletionView.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(130)
-        }
-    }
-}
-
-extension MyPensionViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == nationalPensionColletionView {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: MyNationalPensionCollectionViewCell.identifier,
-                for: indexPath
-            ) as? MyNationalPensionCollectionViewCell else { return UICollectionViewCell() }
-            return cell
-        }
-        else if collectionView == personalPensionColletionView {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: MyPersonalPensionColletionCell.identifier,
-                for: indexPath
-            ) as? MyPersonalPensionColletionCell else { return UICollectionViewCell() }
-            return cell
-        }
-        else if collectionView == housingPensionColletionView {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: MyHousingPensionColletionCell.identifier,
-                for: indexPath
-            ) as? MyHousingPensionColletionCell else { return UICollectionViewCell() }
-            return cell
-        }
-        else {
-            return UICollectionViewCell()
-        }
-    }
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == personalPensionColletionView {
-            return CGSize(width: collectionView.frame.width, height: 146)
-        } else {
-            return CGSize(width: collectionView.frame.width, height: 128)
+            $0.height.equalTo(128)
         }
     }
 }

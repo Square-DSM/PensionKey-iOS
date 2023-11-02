@@ -11,6 +11,8 @@ public class MyPensionFlow: Flow {
 
     let rootViewController = BaseNavigationController()
 
+    private let container = StepperDI.shared
+
     public func navigate(to step: RxFlow.Step) -> FlowContributors {
         guard let step = step as? PensionStep else { return .none }
 
@@ -29,7 +31,7 @@ public class MyPensionFlow: Flow {
     }
 
     private func presentMyPensionView() -> FlowContributors {
-        let myPensionViewController = MyPensionViewController(MyPensionViewModel())
+        let myPensionViewController = MyPensionViewController(container.myPensionViewModel)
         rootViewController.pushViewController(myPensionViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: myPensionViewController,
@@ -38,7 +40,7 @@ public class MyPensionFlow: Flow {
     }
 
     private func presentMyNationalPensionDetailRequire() -> FlowContributors {
-        let myNationalPensionDetailViewController = MyNationalPensionDetailViewController(MyNationalPensionDetailViewModel())
+        let myNationalPensionDetailViewController = MyNationalPensionDetailViewController(container.myNationalPensionDetailViewModel)
         rootViewController.pushViewController(myNationalPensionDetailViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: myNationalPensionDetailViewController,

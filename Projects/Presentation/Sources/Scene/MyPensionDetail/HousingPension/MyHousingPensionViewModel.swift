@@ -8,6 +8,8 @@ public class MyHousingPensionViewModel: BaseViewModel, Stepper {
     public var steps = PublishRelay<Step>()
     private let disposeBag = DisposeBag()
 
+    
+
     public init() {}
 
     public struct Input {

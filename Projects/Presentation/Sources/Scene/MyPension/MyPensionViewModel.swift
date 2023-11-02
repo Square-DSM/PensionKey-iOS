@@ -3,19 +3,40 @@ import Core
 import RxSwift
 import RxCocoa
 import RxFlow
+import Domain
 
 public class MyPensionViewModel: BaseViewModel, Stepper {
     public var steps = PublishRelay<Step>()
     private let disposeBag = DisposeBag()
 
-    public init() {}
+    private let fetchNationalPensionListUseCase: FetchNationalPensionListUseCase
+    private let fetchHousingPensionListUseCase: FetchHousingPensionListUseCase
+    private let fetchPersonalPensionListUseCase: FetchPersonalPensionListUseCase
+
+    public init(
+        fetchNationalPensionListUseCase: FetchNationalPensionListUseCase,
+        fetchHousingPensionListUseCase: FetchHousingPensionListUseCase,
+        fetchPersonalPensionListUseCase: FetchPersonalPensionListUseCase
+    ) {
+        self.fetchNationalPensionListUseCase = fetchNationalPensionListUseCase
+        self.fetchHousingPensionListUseCase = fetchHousingPensionListUseCase
+        self.fetchPersonalPensionListUseCase = fetchPersonalPensionListUseCase
+    }
+
+    let nationalRelay = PublishRelay<NationalPensionEntity>()
+    let personalRelay = PublishRelay<PersonalPensionEntity>()
+    let housingRelay = PublishRelay<HousingPensionEntity>()
 
     public struct Input {
         let isSelectedNationalCell: ControlEvent<IndexPath>
         let isSelectedPersonalCell: ControlEvent<IndexPath>
         let isSelectedHousingCell: ControlEvent<IndexPath>
+        let viewDidLoad: Observable<Void>
     }
     public struct Output {
+        let nationalData: Signal<NationalPensionEntity>
+        let personalData: Signal<PersonalPensionEntity>
+        let housingData: Signal<HousingPensionEntity>
     }
 
     public func transform(_ input: Input) -> Output {
@@ -23,14 +44,42 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
             .map { _ in PensionStep.myNationalPensionDetailRequire }
             .bind(to: steps)
             .disposed(by: disposeBag)
+
         input.isSelectedPersonalCell.asObservable()
             .map { _ in PensionStep.myPersonalPensionDetailRequire }
             .bind(to: steps)
             .disposed(by: disposeBag)
+
         input.isSelectedHousingCell.asObservable()
             .map { _ in PensionStep.myHousingPensionDetailRequire }
             .bind(to: steps)
             .disposed(by: disposeBag)
-        return Output()
+
+        input.viewDidLoad.asObservable()
+            .flatMap {
+                self.fetchNationalPensionListUseCase.execute()
+            }
+            .bind(to: nationalRelay)
+            .disposed(by: disposeBag)
+
+        input.viewDidLoad.asObservable()
+            .flatMap {
+                self.fetchPersonalPensionListUseCase.execute()
+            }
+            .bind(to: personalRelay)
+            .disposed(by: disposeBag)
+
+        input.viewDidLoad.asObservable()
+            .flatMap {
+                self.fetchHousingPensionListUseCase.execute()
+            }
+            .bind(to: housingRelay)
+            .disposed(by: disposeBag)
+
+        return Output(
+            nationalData: nationalRelay.asSignal(),
+            personalData: personalRelay.asSignal(),
+            housingData: housingRelay.asSignal()
+        )
     }
 }

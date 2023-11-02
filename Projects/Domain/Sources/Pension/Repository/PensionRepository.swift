@@ -2,11 +2,11 @@ import Foundation
 import RxSwift
 
 public protocol PensionRepository {
-    func fetchNationalPensionList() -> Completable // Entity
-    func fetchHousingPensionList() -> Completable
-    func fetchPersonalPensionList() -> Completable
+    func fetchNationalPensionList() -> Observable<NationalPensionEntity> // Entity
+    func fetchHousingPensionList() -> Observable<HousingPensionEntity>
+    func fetchPersonalPensionList() -> Observable<PersonalPensionEntity>
 
-    func fetchNationalPensionDetailList() -> Completable
-    func fetchHousingPensionDetailList() -> Completable
-    func fetchPersonalPensionDetailList() -> Completable
+    func fetchNationalPensionDetailList() -> Observable<NationalDetailEntity>
+    func fetchHousingPensionDetailList(id: String) -> Observable<HousingDetailEntity>
+    func fetchPersonalPensionDetailList(id: String) -> Observable<PersonalDetailEntity>
 }

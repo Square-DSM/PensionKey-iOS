@@ -9,6 +9,8 @@ import Core
 
 public class MyNationalPensionDetailViewController: BaseViewController<MyNationalPensionDetailViewModel> {
 
+    private let viewDidLoadRelay = PublishRelay<Void>()
+
     private let scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = .white
@@ -107,6 +109,18 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewDidLoadRelay.accept(())
+    }
+
+    public override func bind() {
+        let input = MyNationalPensionDetailViewModel.Input(viewDidLoad: viewDidLoadRelay.asObservable())
+        let output = viewModel.transform(input)
+
+        output.detailData.asObservable()
+            .subscribe(onNext: {
+                self.pensionPriceLabel.text = $0.expectTotalPay
+            })
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
