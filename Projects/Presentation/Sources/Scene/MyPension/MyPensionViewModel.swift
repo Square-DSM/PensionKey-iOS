@@ -11,14 +11,24 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
     public init() {}
 
     public struct Input {
-        let isSelectedCollectionViewCell: ControlEvent<IndexPath>
+        let isSelectedNationalCell: ControlEvent<IndexPath>
+        let isSelectedPersonalCell: ControlEvent<IndexPath>
+        let isSelectedHousingCell: ControlEvent<IndexPath>
     }
     public struct Output {
     }
 
     public func transform(_ input: Input) -> Output {
-        input.isSelectedCollectionViewCell.asObservable()
-            .map { _ in PensionStep.myPensionDetailRequire }
+        input.isSelectedNationalCell.asObservable()
+            .map { _ in PensionStep.myNationalPensionDetailRequire }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        input.isSelectedPersonalCell.asObservable()
+            .map { _ in PensionStep.myPersonalPensionDetailRequire }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        input.isSelectedHousingCell.asObservable()
+            .map { _ in PensionStep.myHousingPensionDetailRequire }
             .bind(to: steps)
             .disposed(by: disposeBag)
         return Output()
