@@ -1,5 +1,6 @@
 import Foundation
 import Domain
+import Core
 
 struct NoticeDetailDTO: Decodable {
     enum CodingKeys: String, CodingKey {
@@ -23,7 +24,7 @@ extension NoticeDetailDTO {
             id: self.id,
             title: self.title,
             content: self.content,
-            createdAt: self.createdAt,
+            createdAt: self.createdAt.toDate(format: .fullDateWithTime),
             userAccountId: self.userAccountId
         )
     }
