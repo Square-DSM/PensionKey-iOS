@@ -37,7 +37,7 @@ public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensi
 
     private let pensionPriceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "100,000원"
+        $0.text = "300,000원"
         $0.font = .titleLarge
     }
 

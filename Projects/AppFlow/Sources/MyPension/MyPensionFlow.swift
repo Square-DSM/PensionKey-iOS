@@ -17,8 +17,12 @@ public class MyPensionFlow: Flow {
         switch step {
         case .myPensionRequire:
             return presentMyPensionView()
-        case .myPensionDetailRequire:
-            return presentMyPensionDetailView()
+        case .myNationalPensionDetailRequire:
+            return presentMyNationalPensionDetailRequire()
+        case .myPersonalPensionDetailRequire:
+            return presentMyPersonalPensionDetailRequire()
+        case .myHousingPensionDetailRequire:
+            return presentMyHousingPensionDetailRequire()
         default:
             return .none
         }
@@ -33,9 +37,25 @@ public class MyPensionFlow: Flow {
         ))
     }
 
-    private func presentMyPensionDetailView() -> FlowContributors {
+    private func presentMyNationalPensionDetailRequire() -> FlowContributors {
         let myNationalPensionDetailViewController = MyNationalPensionDetailViewController(MyNationalPensionDetailViewModel())
+        rootViewController.pushViewController(myNationalPensionDetailViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: myNationalPensionDetailViewController,
+            withNextStepper: myNationalPensionDetailViewController.viewModel
+        ))
+    }
+
+    private func presentMyPersonalPensionDetailRequire() -> FlowContributors {
         let myPersonalPensionViewController = MyPersonalPensionViewController(MyPersonalPensionViewModel())
+        rootViewController.pushViewController(myPersonalPensionViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: myPersonalPensionViewController,
+            withNextStepper: myPersonalPensionViewController.viewModel
+        ))
+    }
+
+    private func presentMyHousingPensionDetailRequire() -> FlowContributors {
         let myHousingPensionViewController = MyHousingPensionViewController(MyHousingPensionViewModel())
         rootViewController.pushViewController(myHousingPensionViewController, animated: true)
         return .one(flowContributor: .contribute(

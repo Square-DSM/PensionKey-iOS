@@ -6,7 +6,11 @@ public enum PensionStep: Step {
     case signupRequire
     case tabsRequire
     case myPensionRequire
-    case myPensionDetailRequire
+    
+    case myNationalPensionDetailRequire
+    case myPersonalPensionDetailRequire
+    case myHousingPensionDetailRequire
+    
     case noticeRequire
     case benefitRequire
     case myPageRequire

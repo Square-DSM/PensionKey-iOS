@@ -37,7 +37,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let pensionPriceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "100,000원"
+        $0.text = "300,000원"
         $0.font = .titleLarge
     }
 
@@ -56,7 +56,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let monthOfinsuranceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "24개월"
+        $0.text = "2개월"
         $0.font = .titleMedium
     }
 
