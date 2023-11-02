@@ -34,4 +34,16 @@ class NoticeDataSource {
             .map(NoticeListDTO.self)
             .map { $0.toDomain() }
     }
+
+    func searchNoticeList(keyword: String) -> Single<[NoticeEntity]> {
+        return provider.rx.request(.searchNoticeList(keyword: keyword))
+            .map(NoticeListDTO.self)
+            .map { $0.toDomain() }
+    }
+
+    func searchKeyList() -> Single<[SearchKeyEntity]> {
+        return provider.rx.request(.searchKeyList)
+            .map(SearchKeyListDTO.self)
+            .map { $0.toDomain() }
+    }
 }

@@ -10,12 +10,18 @@ public struct ServiceDI {
     public let fetchNoticeListUseCaseInject: FetchNoticeListUseCase
     public let createNoticeUseCaseInject: CreateNoticeUseCase
     public let deleteNoticeUseCaseInject: DeleteNoticeUseCase
+    public let searchNoticeListUseCaseInject: SearchNoticeListUseCase
+    public let searchKeyListUseCaseInject: SearchKeyListUseCase
+    // Comment
+    public let fetchCommentListUseCaseInject: FetchCommentListUseCase
+    public let createCommentUseCaseInject: CreateCommentUseCase
 }
 
 extension ServiceDI {
     private static func resolve() -> ServiceDI {
         let authRepo = AuthRepositoryImpl()
         let noticeRepo = NoticeRepositoryImpl()
+        let commentRepo = CommentRepositoryImpl()
 
         // MARK: Auth관련 UseCase
         let loginUseCaseInject = LoginUseCase(repository: authRepo)
@@ -26,6 +32,12 @@ extension ServiceDI {
         let fetchNoticeListUseCaseInject = FetchNoticeListUseCase(repository: noticeRepo)
         let createNoticeUseCaseInject = CreateNoticeUseCase(repository: noticeRepo)
         let deleteNoticeUseCaseInject = DeleteNoticeUseCase(repository: noticeRepo)
+        let searchNoticeListUseCaseInject = SearchNoticeListUseCase(repository: noticeRepo)
+        let searchKeyListUseCaseInject = SearchKeyListUseCase(repository: noticeRepo)
+        
+        // MARK: Comment관련 UseCase
+        let fetchCommentListUseCaseInject = FetchCommentListUseCase(repository: commentRepo)
+        let createCommentUseCaseInject = CreateCommentUseCase(repository: commentRepo)
 
         return .init(
             loginUseCaseInject: loginUseCaseInject,
@@ -33,7 +45,11 @@ extension ServiceDI {
             fetchNoticeDetailUseCaseInject: fetchNoticeDetailUseCaseInject,
             fetchNoticeListUseCaseInject: fetchNoticeListUseCaseInject,
             createNoticeUseCaseInject: createNoticeUseCaseInject,
-            deleteNoticeUseCaseInject: deleteNoticeUseCaseInject
+            deleteNoticeUseCaseInject: deleteNoticeUseCaseInject,
+            searchNoticeListUseCaseInject: searchNoticeListUseCaseInject,
+            searchKeyListUseCaseInject: searchKeyListUseCaseInject,
+            fetchCommentListUseCaseInject: fetchCommentListUseCaseInject,
+            createCommentUseCaseInject: createCommentUseCaseInject
         )
     }
 }

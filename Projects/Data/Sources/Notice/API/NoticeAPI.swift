@@ -7,6 +7,8 @@ public enum NoticeAPI {
     case fetchNoticeDetail(feedId: String)
     case deleteNotice(feedId: String)
     case fetchNoticeList
+    case searchNoticeList(keyword: String)
+    case searchKeyList
 }
 
 extension NoticeAPI: TargetType {
@@ -24,6 +26,10 @@ extension NoticeAPI: TargetType {
             return "/feeds/delete/\(feedId)"
         case .fetchNoticeList:
             return "feeds/list"
+        case .searchNoticeList:
+            return "feeds/search"
+        case .searchKeyList:
+            return "feeds/search-key"
         }
     }
     
@@ -33,7 +39,7 @@ extension NoticeAPI: TargetType {
             return .post
         case .deleteNotice:
             return .delete
-        case .fetchNoticeDetail, .fetchNoticeList:
+        case .fetchNoticeDetail, .fetchNoticeList, .searchNoticeList, .searchKeyList:
             return .get
         }
     }
@@ -47,6 +53,11 @@ extension NoticeAPI: TargetType {
                     "content": content
                 ],
                 encoding: JSONEncoding.default)
+        case .searchNoticeList(let keyword):
+            return .requestParameters(parameters: 
+                                        [
+                                            "keyword": keyword
+                                        ], encoding: URLEncoding.queryString)
         default:
             return .requestPlain
         }

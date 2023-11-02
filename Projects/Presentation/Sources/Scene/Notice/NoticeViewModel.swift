@@ -27,9 +27,8 @@ public class NoticeViewModel: BaseViewModel, Stepper {
     public func transform(_ input: Input) -> Output {
         let noticeList = BehaviorRelay<[NoticeEntity]>(value: [])
         input.viewAppear.asObservable()
-            .flatMap { [self] in
-                fetchNoticeListUseCase.execute()
-            }
+            .flatMap { self.fetchNoticeListUseCase.execute() }
+            .map { $0.sorted(by: { $0.createdAt > $1.createdAt }) }
             .bind(to: noticeList)
             .disposed(by: disposeBag)
         input.writeNotcieButtonDidTap.asObservable()

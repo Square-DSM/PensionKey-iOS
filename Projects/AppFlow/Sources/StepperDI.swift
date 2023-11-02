@@ -30,12 +30,18 @@ extension StepperDI {
             fetchNoticeListUseCase: ServiceDI.fetchNoticeListUseCaseInject
         )
         let noticeDetailViewModel = NoticeDetailViewModel(
-            fetchNoticeDetailUseCase: ServiceDI.fetchNoticeDetailUseCaseInject
+            fetchNoticeDetailUseCase: ServiceDI.fetchNoticeDetailUseCaseInject,
+            fetchCommentListUseCase: ServiceDI.fetchCommentListUseCaseInject,
+            createCommentUseCase: ServiceDI.createCommentUseCaseInject,
+            deleteNoticeUseCase:  ServiceDI.deleteNoticeUseCaseInject
         )
         let writeNoticeViewModel = WriteNoticeViewModel(
             createNoticeUseCase: ServiceDI.createNoticeUseCaseInject
         )
-        let searchViewModel = SearchViewModel()
+        let searchViewModel = SearchViewModel(
+            searchNoticeListUseCase: ServiceDI.searchNoticeListUseCaseInject,
+            searchKeyListUseCase: ServiceDI.searchKeyListUseCaseInject
+        )
 
         return .init(
             loginViewModel: loginViewModel,

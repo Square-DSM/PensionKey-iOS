@@ -50,12 +50,13 @@ public class NoticeFlow: Flow {
     }
 
     private func presentNoticeDetailView(id: String) -> FlowContributors {
-        let noticeDetailViewController = NoticeDetailViewController(container.noticeDetailViewModel)
-        rootViewController.pushViewController(noticeDetailViewController, animated: true)
-        noticeDetailViewController.id = id
+        let noticeDetailFlow = NoticeDetailFlow()
+        Flows.use(noticeDetailFlow, when: .created) { root in
+            self.rootViewController.pushViewController(root, animated: true)
+        }
         return .one(flowContributor: .contribute(
-            withNextPresentable: noticeDetailViewController,
-            withNextStepper: noticeDetailViewController.viewModel
+            withNextPresentable: noticeDetailFlow,
+            withNextStepper: OneStepper(withSingleStep: PensionStep.noticeDetailRequire(id: id))
         ))
     }
 

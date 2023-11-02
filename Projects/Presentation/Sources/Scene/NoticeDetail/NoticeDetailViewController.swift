@@ -11,7 +11,6 @@ import Domain
 public class NoticeDetailViewController: BaseViewController<NoticeDetailViewModel> {
     public var id: String = ""
     private let viewAppear = PublishRelay<Void>()
-    private let editPostRelay = PublishRelay<Void>()
     private let deletePostRelay = PublishRelay<Void>()
 
     private let scrollView = UIScrollView()
@@ -19,9 +18,6 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
 
     public let profileView = ProfileView()
 
-    let imageView = UIImageView().then {
-        $0.image = .checkmark
-    }
     public let titleLabel = UILabel().then {
         $0.text = "국민연금이 뭔가요?"
         $0.font = .titleMedium
@@ -51,8 +47,9 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
         let input = NoticeDetailViewModel.Input(
             id: id,
             viewAppear: viewAppear.asSignal(),
+            commentText: commentView.commentTextField.rx.text.orEmpty.asDriver(),
             deletePostButtonDidClick: deletePostRelay.asSignal(),
-            editPostButtonDidClick: editPostRelay.asSignal()
+            commentRegisterButtonDidTap: commentView.registerButton.rx.tap.asSignal()
         )
 
         let output = viewModel.transform(input)
@@ -61,8 +58,32 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
                 titleLabel.text = $0.title
                 contentLabel.text = $0.content
                 profileView.idLabel.text = $0.userAccountId
-                profileView.dateLabel.text = $0.createdAt
+                profileView.dateLabel.text = $0.createdAt.getTimeAgoAsKoreanString()
             }).disposed(by: disposeBag)
+        output.commentListData
+            .do(onNext: { [self] in
+                self.commentView.countLabel.text = "\($0.count)"
+            })
+            .bind(to: commentView.commentTableView.rx.items(
+            cellIdentifier: CommentTableViewCell.identifier,
+            cellType: CommentTableViewCell.self
+        )) { row, item, cell in
+            cell.commentLabel.text = item.content
+            cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt.getTimeAgoAsKoreanString())"
+        }.disposed(by: disposeBag)
+        output.reloadView.subscribe(onNext: { [self] in
+            self.viewAppear.accept(())
+        }).disposed(by: disposeBag)
+        output.isEmpty.asObservable()
+            .subscribe(onNext: { [self] in
+                commentView.registerButton.isEnabled = $0
+                if $0 {
+                    commentView.registerButton.backgroundColor = .yellow100
+                } else {
+                    commentView.registerButton.backgroundColor = .gray50
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -70,7 +91,6 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
         scrollView.addSubview(contentView)
         [
             profileView,
-            imageView,
             titleLabel,
             contentLabel,
             spacerView,
@@ -79,25 +99,21 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
     }
     public override func setLayout() {
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.trailing.bottom.equalToSuperview()
         }
         contentView.snp.makeConstraints {
             $0.top.width.equalToSuperview()
             $0.bottom.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(commentView).offset(32)
+            $0.bottom.equalTo(commentView.snp.bottom).offset(32)
         }
         profileView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalToSuperview()
             $0.height.equalTo(64)
         }
-        imageView.snp.makeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(12)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(199)
-        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(24)
+            $0.top.equalTo(profileView.snp.bottom).offset(12)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         contentLabel.snp.makeConstraints {
@@ -110,7 +126,7 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
             $0.height.equalTo(8)
         }
         commentView.snp.makeConstraints {
-            $0.top.equalTo(spacerView.snp.bottom)
+            $0.top.equalTo(spacerView.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview()
         }
     }
@@ -130,11 +146,6 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
             cancelAction
         ].forEach { deleteAlert.addAction($0) }
 
-        let editAction = UIAction(
-            title: "게시글 수정",
-            image: .pencil,
-            handler: { _ in self.editPostRelay.accept(())}
-        )
         let deleteAction = UIAction(
             title: "게시글 삭제",
             image: .trashCan,
@@ -145,7 +156,7 @@ public class NoticeDetailViewController: BaseViewController<NoticeDetailViewMode
             image: nil,
             identifier: nil,
             options: .destructive,
-            children: [editAction, deleteAction]
+            children: [deleteAction]
         )
         profileView.moreButton.menu = moreMenu
     }

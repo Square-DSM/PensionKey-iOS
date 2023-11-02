@@ -9,4 +9,8 @@ public protocol NoticeRepository {
     func deleteNotice(feedID: String) -> Completable
 
     func fetchNoticeList() -> Single<[NoticeEntity]>
+
+    func searchNoticeList(keyword: String) -> Single<[NoticeEntity]>
+
+    func searchKeyList() -> Single<[SearchKeyEntity]>
 }

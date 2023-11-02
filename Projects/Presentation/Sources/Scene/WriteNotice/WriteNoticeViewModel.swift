@@ -28,7 +28,7 @@ public class WriteNoticeViewModel: BaseViewModel, Stepper {
     public func transform(_ input: Input) -> Output {
         let info = Driver.combineLatest(input.titleText, input.contentText)
         info.asObservable()
-            .map { !$0.0.isEmpty && !$0.1.isEmpty }
+            .map { !$0.0.isEmpty && !$0.1.isEmpty && $0.1 != "내용을 입력해주세요." }
             .bind(to: isRegisterAble)
             .disposed(by: disposeBag)
         
