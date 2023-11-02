@@ -54,7 +54,6 @@ public class NoticeViewController: BaseViewController<NoticeViewModel> {
                 cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt.getTimeAgoAsKoreanString())"
                 cell.commentStateView.commentStateLabel.text = "\(item.commentCount)"
                 cell.id = item.id
-                cell.commentCount = item.commentCount
                 cell.selectionStyle = .none
                 cell.setUp()
             }.disposed(by: disposeBag)

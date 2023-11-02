@@ -8,12 +8,7 @@ import PensionKeyKit
 import Core
 
 public class SearchViewController: BaseViewController<SearchViewModel> {
-
-    let dummyKeyWords = BehaviorRelay(value: [
-        "국민 연금",
-        "연금",
-        "국민 연금 납부 금액"
-    ])
+    private let viewAppear = PublishRelay<Void>()
 
     private let titleViewLabel = UILabel().then {
         $0.text = "게시글 검색"
@@ -56,7 +51,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
         $0.font = .titleSmall
     }
     private let searchResultNumberLabel = UILabel().then {
-        $0.text = "4"
+        $0.text = "0"
         $0.textColor = .yellow500
         $0.font = .titleSmall
     }
@@ -78,6 +73,7 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
 
     public override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
+        self.viewAppear.accept(())
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
@@ -95,20 +91,20 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
             searchResultView,
             searchKeywordView
         ].forEach { view.addSubview($0) }
-
+        
         // Search Keyword
         [
             searchKeywordMarkLabel,
             searchKeywordTableView
         ].forEach { searchKeywordView.addSubview($0) }
-
+        
         // Search Result
         [
             searchResultMarkLabel,
             searchResultNumberLabel,
             searchResultTableView
         ].forEach { searchResultView.addSubview($0) }
-
+        
         // Result Empty
         resultEmptyView.addSubview(resultEmptyLabel)
     }
@@ -161,18 +157,28 @@ public class SearchViewController: BaseViewController<SearchViewModel> {
     }
 
     public override func bind() {
-        dummyKeyWords.asObservable()
-            .bind(to: searchKeywordTableView.rx.items(cellIdentifier: SearchKeywordTableViewCell.identifier, cellType: SearchKeywordTableViewCell.self)) { (index, element, cell) in
-                cell.keywordLabel.text = element
-                cell.selectionStyle = .none
-            }
-            .disposed(by: disposeBag)
-
-        dummyKeyWords.asObservable()
+        let input = SearchViewModel.Input(
+            viewAppear: viewAppear.asSignal(),
+            keywordText: self.searchController.searchBar.searchTextField.rx.text.orEmpty.asDriver()
+        )
+        let output = viewModel.transform(input)
+        output.noticeList
+            .do(onNext: {
+                self.searchResultNumberLabel.text = "\($0.count)"
+                self.viewAppear.accept(())
+            })
             .bind(to: searchResultTableView.rx.items(cellIdentifier: NoticeTableViewCell.identifier, cellType: NoticeTableViewCell.self)) { (index, element, cell) in
-                cell.titleLabel.text = element
+            cell.titleLabel.text = element.title
+            cell.idAndDateLabel.text = "\(element.userAccountId) · \(element.createdAt.getTimeAgoAsKoreanString())"
+            cell.commentStateView.commentStateLabel.text = "\(element.commentCount)"
+            cell.id = element.id
+            cell.selectionStyle = .none
+            cell.setUp()
+        }.disposed(by: disposeBag)
+        output.keywordList
+            .bind(to: searchKeywordTableView.rx.items(cellIdentifier: SearchKeywordTableViewCell.identifier, cellType: SearchKeywordTableViewCell.self)) { (index, element, cell) in
+                cell.keywordLabel.text = element.keyword
                 cell.selectionStyle = .none
-                cell.setUp()
             }
             .disposed(by: disposeBag)
 

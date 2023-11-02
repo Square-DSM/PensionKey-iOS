@@ -38,7 +38,10 @@ extension StepperDI {
         let writeNoticeViewModel = WriteNoticeViewModel(
             createNoticeUseCase: ServiceDI.createNoticeUseCaseInject
         )
-        let searchViewModel = SearchViewModel()
+        let searchViewModel = SearchViewModel(
+            searchNoticeListUseCase: ServiceDI.searchNoticeListUseCaseInject,
+            searchKeyListUseCase: ServiceDI.searchKeyListUseCaseInject
+        )
 
         return .init(
             loginViewModel: loginViewModel,

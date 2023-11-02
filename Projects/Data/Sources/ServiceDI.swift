@@ -10,6 +10,8 @@ public struct ServiceDI {
     public let fetchNoticeListUseCaseInject: FetchNoticeListUseCase
     public let createNoticeUseCaseInject: CreateNoticeUseCase
     public let deleteNoticeUseCaseInject: DeleteNoticeUseCase
+    public let searchNoticeListUseCaseInject: SearchNoticeListUseCase
+    public let searchKeyListUseCaseInject: SearchKeyListUseCase
     // Comment
     public let fetchCommentListUseCaseInject: FetchCommentListUseCase
     public let createCommentUseCaseInject: CreateCommentUseCase
@@ -30,6 +32,8 @@ extension ServiceDI {
         let fetchNoticeListUseCaseInject = FetchNoticeListUseCase(repository: noticeRepo)
         let createNoticeUseCaseInject = CreateNoticeUseCase(repository: noticeRepo)
         let deleteNoticeUseCaseInject = DeleteNoticeUseCase(repository: noticeRepo)
+        let searchNoticeListUseCaseInject = SearchNoticeListUseCase(repository: noticeRepo)
+        let searchKeyListUseCaseInject = SearchKeyListUseCase(repository: noticeRepo)
         
         // MARK: Comment관련 UseCase
         let fetchCommentListUseCaseInject = FetchCommentListUseCase(repository: commentRepo)
@@ -42,6 +46,8 @@ extension ServiceDI {
             fetchNoticeListUseCaseInject: fetchNoticeListUseCaseInject,
             createNoticeUseCaseInject: createNoticeUseCaseInject,
             deleteNoticeUseCaseInject: deleteNoticeUseCaseInject,
+            searchNoticeListUseCaseInject: searchNoticeListUseCaseInject,
+            searchKeyListUseCaseInject: searchKeyListUseCaseInject,
             fetchCommentListUseCaseInject: fetchCommentListUseCaseInject,
             createCommentUseCaseInject: createCommentUseCaseInject
         )
