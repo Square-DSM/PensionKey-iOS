@@ -33,8 +33,8 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
 
     public struct Input {
         let isSelectedNationalCell: ControlEvent<IndexPath>
-        let isSelectedPersonalCell: ControlEvent<IndexPath>
-        let isSelectedHousingCell: ControlEvent<IndexPath>
+        let isSelectedPersonalCell: Observable<String>
+        let isSelectedHousingCell: Observable<String>
         let viewDidLoad: Observable<Void>
     }
     public struct Output {
@@ -51,12 +51,12 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
             .disposed(by: disposeBag)
 
         input.isSelectedPersonalCell.asObservable()
-            .map { _ in PensionStep.myPersonalPensionDetailRequire }
+            .map { PensionStep.myPersonalPensionDetailRequire(id: $0) }
             .bind(to: steps)
             .disposed(by: disposeBag)
 
         input.isSelectedHousingCell.asObservable()
-            .map { _ in PensionStep.myHousingPensionDetailRequire }
+            .map { PensionStep.myHousingPensionDetailRequire(id: $0) }
             .bind(to: steps)
             .disposed(by: disposeBag)
 

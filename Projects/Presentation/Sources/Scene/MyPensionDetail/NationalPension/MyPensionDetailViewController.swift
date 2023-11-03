@@ -39,7 +39,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let pensionPriceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "300,000원"
+        $0.text = "-원"
         $0.font = .titleLarge
     }
 
@@ -58,7 +58,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let monthOfinsuranceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "2개월"
+        $0.text = "-개월"
         $0.font = .titleMedium
     }
 
@@ -70,7 +70,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let sinceOfinsuranceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "2024.01.01"
+        $0.text = "-.-.-"
         $0.font = .titleMedium
     }
 
@@ -91,7 +91,7 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let averageIncomeLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "2,000,000원"
+        $0.text = "-원"
         $0.font = .titleMedium
     }
 
@@ -103,13 +103,16 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
 
     private let expectationIncomeLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "4,000,000원"
+        $0.text = "-원"
         $0.font = .titleMedium
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        viewDidLoadRelay.accept(())
     }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        viewDidLoadRelay.accept(())
     }
 
     public override func bind() {
@@ -117,9 +120,16 @@ public class MyNationalPensionDetailViewController: BaseViewController<MyNationa
         let output = viewModel.transform(input)
 
         output.detailData.asObservable()
-            .subscribe(onNext: {
-                print($0)
-            })
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.pensionPriceLabel.text = "\(data.expectTotalPay.toDecimal())원"
+                    owner.sinceOfinsuranceLabel.text = data.pensionPayDate
+                    owner.monthOfinsuranceLabel.text = "\(data.payMonth)개월"
+                    owner.averageIncomeLabel.text = "\(data.meanMonthlyIncome.toDecimal())원"
+                    owner.expectationIncomeLabel.text = "\(data.expectTotalPay.toDecimal())원"
+                }
+            )
             .disposed(by: disposeBag)
     }
 

@@ -21,10 +21,10 @@ public class MyPensionFlow: Flow {
             return presentMyPensionView()
         case .myNationalPensionDetailRequire:
             return presentMyNationalPensionDetailRequire()
-        case .myPersonalPensionDetailRequire:
-            return presentMyPersonalPensionDetailRequire()
-        case .myHousingPensionDetailRequire:
-            return presentMyHousingPensionDetailRequire()
+        case .myPersonalPensionDetailRequire(let id):
+            return presentMyPersonalPensionDetailRequire(id: id)
+        case .myHousingPensionDetailRequire(let id):
+            return presentMyHousingPensionDetailRequire(id: id)
         default:
             return .none
         }
@@ -48,8 +48,9 @@ public class MyPensionFlow: Flow {
         ))
     }
 
-    private func presentMyPersonalPensionDetailRequire() -> FlowContributors {
-        let myPersonalPensionViewController = MyPersonalPensionViewController(MyPersonalPensionViewModel())
+    private func presentMyPersonalPensionDetailRequire(id: String) -> FlowContributors {
+        let myPersonalPensionViewController = MyPersonalPensionViewController(container.myPersonalPensionViewModel)
+        myPersonalPensionViewController.id = id
         rootViewController.pushViewController(myPersonalPensionViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: myPersonalPensionViewController,
@@ -57,8 +58,9 @@ public class MyPensionFlow: Flow {
         ))
     }
 
-    private func presentMyHousingPensionDetailRequire() -> FlowContributors {
-        let myHousingPensionViewController = MyHousingPensionViewController(MyHousingPensionViewModel())
+    private func presentMyHousingPensionDetailRequire(id: String) -> FlowContributors {
+        let myHousingPensionViewController = MyHousingPensionViewController(container.myHousingPensionViewModel)
+        myHousingPensionViewController.id = id
         rootViewController.pushViewController(myHousingPensionViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: myHousingPensionViewController,

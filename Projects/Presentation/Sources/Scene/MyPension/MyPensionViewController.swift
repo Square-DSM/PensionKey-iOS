@@ -9,10 +9,13 @@ import Core
 
 public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
 
+    private let housingPensionId = PublishRelay<String>()
+    private let PersonalPensionId = PublishRelay<String>()
+
     private let viewDidLoadRelay = PublishRelay<Void>()
     private var totalPension: Int = 0 {
         didSet {
-            self.totalMoneyLabel.text = "\(totalPension)원"
+            self.totalMoneyLabel.text = "\(totalPension.toDecimal())원"
         }
     }
 
@@ -112,11 +115,27 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
     public override func bind() {
         let input = MyPensionViewModel.Input(
             isSelectedNationalCell: nationalPensionColletionView.rx.itemSelected,
-            isSelectedPersonalCell: personalPensionColletionView.rx.itemSelected,
-            isSelectedHousingCell: housingPensionColletionView.rx.itemSelected,
+            isSelectedPersonalCell: PersonalPensionId.asObservable(),
+            isSelectedHousingCell: housingPensionId.asObservable(),
             viewDidLoad: viewDidLoadRelay.asObservable()
         )
         let output = viewModel.transform(input)
+
+        personalPensionColletionView.rx.itemSelected
+            .map { index -> String in
+                guard let cell = self.personalPensionColletionView.cellForItem(at: index) as? MyPersonalPensionColletionCell else { return "" }
+                return cell.id
+            }
+            .bind(to: PersonalPensionId)
+            .disposed(by: disposeBag)
+    
+        housingPensionColletionView.rx.itemSelected
+            .map { index -> String in
+                guard let cell = self.housingPensionColletionView.cellForItem(at: index) as? MyHousingPensionColletionCell else { return "" }
+                return cell.id
+            }
+            .bind(to: housingPensionId)
+            .disposed(by: disposeBag)
 
         output.nationalData.asObservable()
             .bind(to: nationalPensionColletionView.rx.items(
@@ -124,7 +143,7 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
                 cellType: MyNationalPensionCollectionViewCell.self
             )) { (row, element, cell) in
                 cell.contentLabel.text = "\(element.payMonth)개월 동안 납부했어요"
-                cell.pensionLabel.text = "\(element.expectTotalPay)원"
+                cell.pensionLabel.text = "\(element.expectTotalPay.toDecimal())원"
                 self.totalPension += element.expectTotalPay
             }
             .disposed(by: disposeBag)
@@ -134,8 +153,9 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
                 cellIdentifier: MyPersonalPensionColletionCell.identifier,
                 cellType: MyPersonalPensionColletionCell.self
             )) { (row, element, cell) in
+                cell.id = element.id
                 cell.contentLabel.text = "\(element.companyName) •\n\(element.productName)"
-                cell.pensionLabel.text = "\(element.totalPaymentAmt)원"
+                cell.pensionLabel.text = "\(element.totalPaymentAmt.toDecimal())원"
                 self.totalPension += element.totalPaymentAmt
             }
             .disposed(by: disposeBag)
@@ -145,11 +165,13 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
                 cellIdentifier: MyHousingPensionColletionCell.identifier,
                 cellType: MyHousingPensionColletionCell.self
             )) { (row, element, cell) in
+                cell.id = element.id
                 cell.contentLabel.text = "\(element.pensionEndDate) 까지 • \(element.paymentType)결제"
-                cell.pensionLabel.text = "\(element.expectPension)원"
+                cell.pensionLabel.text = "\(element.expectPension.toDecimal())원"
                 self.totalPension += element.expectPension
             }
             .disposed(by: disposeBag)
+
         output.userData.asObservable()
             .bind(onNext: { [self] in
                 nameLabel.text =  $0.name

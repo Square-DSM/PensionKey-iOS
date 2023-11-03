@@ -1,34 +1,26 @@
 import Foundation
 import Domain
 
-struct HousingDetailDTOElement: Codable {
-    let id, paymentType: String
+struct HousingDetailDTO: Decodable {
+    let paymentType: String
     let expectPension: Int
-    let pensionEndDate: String
+    let pensionEndDate, managementBranch: String
 
     enum CodingKeys: String, CodingKey {
-        case id
         case paymentType = "payment_type"
         case expectPension = "expect_pension"
         case pensionEndDate = "pension_end_date"
+        case managementBranch = "management_branch"
     }
 }
-
-typealias HousingDetailDTO = [HousingDetailDTOElement]
 
 extension HousingDetailDTO {
     func toDomain() -> HousingDetailEntity {
-        return self.map { $0.toDomain() }
-    }
-}
-
-extension HousingDetailDTOElement {
-    func toDomain() -> HousingDetailEntityElement {
         return .init(
-            id: id,
             paymentType: paymentType,
             expectPension: expectPension,
-            pensionEndDate: pensionEndDate
+            pensionEndDate: pensionEndDate,
+            managementBranch: managementBranch
         )
     }
 }

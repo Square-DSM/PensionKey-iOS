@@ -1,17 +1,15 @@
 import Foundation
 
-public struct HousingDetailEntityElement: Codable {
-    public let id, paymentType: String
+public struct HousingDetailEntity: Codable {
+    public let paymentType: String
     public let expectPension: Int
-    public let pensionEndDate: String
+    public let pensionEndDate, managementBranch: String
 
-    public init(id: String, paymentType: String, expectPension: Int, pensionEndDate: String) {
-        self.id = id
+    public init(paymentType: String, expectPension: Int, pensionEndDate: String, managementBranch: String) {
         self.paymentType = paymentType
         self.expectPension = expectPension
         self.pensionEndDate = pensionEndDate
+        self.managementBranch = managementBranch
     }
 }
-
-public typealias HousingDetailEntity = [HousingDetailEntityElement]
 

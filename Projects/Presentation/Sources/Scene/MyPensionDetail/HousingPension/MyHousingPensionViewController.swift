@@ -9,6 +9,10 @@ import Core
 
 public class MyHousingPensionViewController: BaseViewController<MyHousingPensionViewModel> {
 
+    public var id: String = ""
+
+    private let viewDidAppearRelay = PublishRelay<String>()
+
     private let scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = .white
@@ -37,7 +41,7 @@ public class MyHousingPensionViewController: BaseViewController<MyHousingPension
 
     private let pensionPriceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "300,000원"
+        $0.text = "-원"
         $0.font = .titleLarge
     }
 
@@ -56,7 +60,7 @@ public class MyHousingPensionViewController: BaseViewController<MyHousingPension
 
     private let paymentMethodLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "카드"
+        $0.text = "-"
         $0.font = .titleMedium
     }
 
@@ -68,7 +72,7 @@ public class MyHousingPensionViewController: BaseViewController<MyHousingPension
 
     private let pensionEndDateLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "2024.01.01"
+        $0.text = "-.-.-"
         $0.font = .titleMedium
     }
 
@@ -89,7 +93,7 @@ public class MyHousingPensionViewController: BaseViewController<MyHousingPension
 
     private let managementPointLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "동사무소"
+        $0.text = "-"
         $0.font = .titleMedium
     }
 
@@ -101,12 +105,34 @@ public class MyHousingPensionViewController: BaseViewController<MyHousingPension
 
     private let expectedPensionAmountLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "4,000,000원"
+        $0.text = "-원"
         $0.font = .titleMedium
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        viewDidAppearRelay.accept(id)
     }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    public override func bind() {
+        let input = MyHousingPensionViewModel.Input(viewDidAppear: viewDidAppearRelay.asObservable())
+        let output = viewModel.transform(input)
+
+        output.housingPensionData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.pensionPriceLabel.text = "\(data.expectPension.toDecimal())원"
+                    owner.paymentMethodLabel.text = data.paymentType
+                    owner.pensionEndDateLabel.text = data.pensionEndDate
+                    owner.managementPointLabel.text = data.managementBranch
+                    owner.expectedPensionAmountLabel.text = "\(data.expectPension.toDecimal())원"
+                }
+            )
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {

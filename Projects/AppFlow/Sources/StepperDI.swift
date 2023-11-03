@@ -17,6 +17,8 @@ public struct StepperDI {
 
     public let myPensionViewModel: MyPensionViewModel
     public let myNationalPensionDetailViewModel: MyNationalPensionDetailViewModel
+    public let myHousingPensionViewModel: MyHousingPensionViewModel
+    public let myPersonalPensionViewModel: MyPersonalPensionViewModel
 }
 
 extension StepperDI {
@@ -64,6 +66,13 @@ extension StepperDI {
         let myNationalPensionDetailViewModel = MyNationalPensionDetailViewModel(
             fetchNationalPensionDetailListUseCase: serviceDI.fetchNationalPensionDetailListInject
         )
+        let myHousingPensionViewModel = MyHousingPensionViewModel(
+            fetchHousingPensionDetailListUseCase: serviceDI.fetchHousingPensionDetailListInject
+        )
+        let myPersonalPensionViewModel = MyPersonalPensionViewModel(
+            FetchPersonalPensionDetailListUseCase: serviceDI.fetchPersonalPensionDetailListInject
+        )
+        
 
         return .init(
             myPageViewModel: myPageViewModel,
@@ -74,7 +83,9 @@ extension StepperDI {
             writeNoticeViewModel: writeNoticeViewModel,
             searchViewModel: searchViewModel,
             myPensionViewModel: myPensionViewModel,
-            myNationalPensionDetailViewModel: myNationalPensionDetailViewModel
+            myNationalPensionDetailViewModel: myNationalPensionDetailViewModel,
+            myHousingPensionViewModel: myHousingPensionViewModel,
+            myPersonalPensionViewModel: myPersonalPensionViewModel
         )
     }
 }
