@@ -102,6 +102,7 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
 
     public override func viewWillAppear(_ animated: Bool) {
         viewDidLoadRelay.accept(())
+        totalPension = 0
     }
 
     public override func attribute() {
@@ -149,6 +150,10 @@ public class MyPensionViewController: BaseViewController<MyPensionViewModel> {
                 self.totalPension += element.expectPension
             }
             .disposed(by: disposeBag)
+        output.userData.asObservable()
+            .bind(onNext: { [self] in
+                nameLabel.text =  $0.name
+            }).disposed(by: disposeBag)
     }
 
     public override func addView() {
