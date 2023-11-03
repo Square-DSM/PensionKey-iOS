@@ -80,8 +80,12 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
     }
 
     private let myPostTableView = UITableView().then {
+        $0.showsVerticalScrollIndicator = false
+        $0.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
+        $0.rowHeight = UITableView.automaticDimension
+        $0.tableHeaderView = UIView()
+        $0.separatorInset.left = 0
         $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
     }
 
     // MARK: Setting view
@@ -136,7 +140,7 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
         let input = MyPageViewModel.Input(viewDidLoad: viewDidLoadRelay.asSignal())
         let output = viewModel.transform(input)
 
-        output.UserInfoData.asObservable()
+        output.userInfoData.asObservable()
             .subscribe(
                 with: self,
                 onNext: { owner, info in
@@ -146,6 +150,21 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
                 print(err)
             })
             .disposed(by: disposeBag)
+        output.myNoticeList
+            .do(onNext: {
+                self.myPostEmptyMarkLabel.isHidden = !$0.isEmpty
+            })
+            .bind(to: self.myPostTableView.rx.items(
+            cellIdentifier: NoticeTableViewCell.identifier,
+            cellType: NoticeTableViewCell.self
+        )) { row, item, cell in
+            cell.titleLabel.text = item.title
+            cell.idAndDateLabel.text = "\(item.userAccountId) · \(item.createdAt.getTimeAgoAsKoreanString())"
+            cell.commentStateView.commentStateLabel.text = "\(item.commentCount)"
+            cell.id = item.id
+            cell.selectionStyle = .none
+            cell.setUp()
+        }.disposed(by: disposeBag)
     }
 
     // MARK: AddView
@@ -169,8 +188,8 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
         // myPost
         [
             myPostMarkLabel,
-            myPostEmptyMarkLabel,
-            myPostTableView
+            myPostTableView,
+            myPostEmptyMarkLabel
         ].forEach { myPostView.addSubview($0) }
     
         // setting
@@ -228,6 +247,7 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
             $0.top.equalTo(profileView.snp.bottom).offset(8)
             $0.width.equalToSuperview()
             $0.bottom.equalTo(myPostTableView.snp.bottom).offset(24)
+            $0.height.lessThanOrEqualTo(360).priority(999)
         }
         myPostMarkLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(24)
@@ -239,7 +259,8 @@ public class MyPageViewController: BaseViewController<MyPageViewModel> {
         myPostTableView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(myPostMarkLabel.snp.bottom).offset(12)
-            $0.height.greaterThanOrEqualTo(160)
+            $0.height.greaterThanOrEqualTo(160).priority(1000)
+            $0.height.greaterThanOrEqualTo(myPostTableView.contentSize.height).priority(998)
         }
 
         // Setting

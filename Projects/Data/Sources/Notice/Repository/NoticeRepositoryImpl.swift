@@ -29,4 +29,8 @@ class NoticeRepositoryImpl: NoticeRepository {
     func searchKeyList() -> RxSwift.Single<[Domain.SearchKeyEntity]> {
         return noticeDataSource.searchKeyList()
     }
+
+    func fetchMyNoticeList() -> RxSwift.Single<[Domain.NoticeEntity]> {
+        return noticeDataSource.fetchMyNoticeList()
+    }
 }

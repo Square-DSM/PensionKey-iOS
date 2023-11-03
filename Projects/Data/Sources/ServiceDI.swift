@@ -3,17 +3,18 @@ import Domain
 public struct ServiceDI {
     public static let shared = resolve()
     // User
-    public let fetchUserInfo: FetchUserInfoUseCase
+    public let fetchUserInfoUseCaseInject: FetchUserInfoUseCase
     // Auth
     public let loginUseCaseInject: LoginUseCase
     public let signupUseCaseInject: SignupUseCase
-    // Norice
+    // Notice
     public let fetchNoticeDetailUseCaseInject: FetchNoticeDetailUseCase
     public let fetchNoticeListUseCaseInject: FetchNoticeListUseCase
     public let createNoticeUseCaseInject: CreateNoticeUseCase
     public let deleteNoticeUseCaseInject: DeleteNoticeUseCase
+    public let fetchMyNoticeListUseCaseInject: FetchMyNoticeListUseCase
 
-    //Pension
+    // Pension
     public let fetchNationalPensionListInject: FetchNationalPensionListUseCase
     public let fetchHousingPensionListInject: FetchHousingPensionListUseCase
     public let fetchPersonalPensionListInject: FetchPersonalPensionListUseCase
@@ -53,6 +54,7 @@ extension ServiceDI {
         let deleteNoticeUseCaseInject = DeleteNoticeUseCase(repository: noticeRepo)
         let searchNoticeListUseCaseInject = SearchNoticeListUseCase(repository: noticeRepo)
         let searchKeyListUseCaseInject = SearchKeyListUseCase(repository: noticeRepo)
+        let fetchMyNoticeListUseCaseInject = FetchMyNoticeListUseCase(repository: noticeRepo)
         
         // MARK: Comment관련 UseCase
         let fetchCommentListUseCaseInject = FetchCommentListUseCase(repository: commentRepo)
@@ -68,13 +70,14 @@ extension ServiceDI {
         let fetchPersonalPensionDetailListInject = FetchPersonalPensionDetailListUseCase(repository: pensionRepo)
 
         return .init(
-            fetchUserInfo: fetchUserInfoInject,
+            fetchUserInfoUseCaseInject: fetchUserInfoInject,
             loginUseCaseInject: loginUseCaseInject,
             signupUseCaseInject: signupUseCaseInject,
             fetchNoticeDetailUseCaseInject: fetchNoticeDetailUseCaseInject,
             fetchNoticeListUseCaseInject: fetchNoticeListUseCaseInject,
             createNoticeUseCaseInject: createNoticeUseCaseInject,
             deleteNoticeUseCaseInject: deleteNoticeUseCaseInject,
+            fetchMyNoticeListUseCaseInject: fetchMyNoticeListUseCaseInject,
             fetchNationalPensionListInject: fetchNationalPensionListInject,
             fetchHousingPensionListInject: fetchHousingPensionListInject,
             fetchPersonalPensionListInject: fetchPersonalPensionListInject,

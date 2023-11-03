@@ -25,7 +25,8 @@ extension StepperDI {
 
         // MARK: User관련 ViewModel
         let myPageViewModel = MyPageViewModel(
-            fetchUserInfoUseCase: serviceDI.fetchUserInfo
+            fetchUserInfoUseCase: serviceDI.fetchUserInfoUseCaseInject,
+            fetchMyNoticeListUseCase: serviceDI.fetchMyNoticeListUseCaseInject
         )
 
         // MARK: Auth관련 ViewModel
@@ -58,7 +59,7 @@ extension StepperDI {
             fetchNationalPensionListUseCase: serviceDI.fetchNationalPensionListInject,
             fetchHousingPensionListUseCase: serviceDI.fetchHousingPensionListInject,
             fetchPersonalPensionListUseCase: serviceDI.fetchPersonalPensionListInject,
-            fetchUserInfoUseCase: serviceDI.fetchUserInfo
+            fetchUserInfoUseCase: serviceDI.fetchUserInfoUseCaseInject
         )
         let myNationalPensionDetailViewModel = MyNationalPensionDetailViewModel(
             fetchNationalPensionDetailListUseCase: serviceDI.fetchNationalPensionDetailListInject
