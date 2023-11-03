@@ -12,20 +12,24 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
     private let fetchNationalPensionListUseCase: FetchNationalPensionListUseCase
     private let fetchHousingPensionListUseCase: FetchHousingPensionListUseCase
     private let fetchPersonalPensionListUseCase: FetchPersonalPensionListUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
 
     public init(
         fetchNationalPensionListUseCase: FetchNationalPensionListUseCase,
         fetchHousingPensionListUseCase: FetchHousingPensionListUseCase,
-        fetchPersonalPensionListUseCase: FetchPersonalPensionListUseCase
+        fetchPersonalPensionListUseCase: FetchPersonalPensionListUseCase,
+        fetchUserInfoUseCase: FetchUserInfoUseCase
     ) {
         self.fetchNationalPensionListUseCase = fetchNationalPensionListUseCase
         self.fetchHousingPensionListUseCase = fetchHousingPensionListUseCase
         self.fetchPersonalPensionListUseCase = fetchPersonalPensionListUseCase
+        self.fetchUserInfoUseCase = fetchUserInfoUseCase
     }
 
     let nationalRelay = PublishRelay<NationalPensionEntity>()
     let personalRelay = PublishRelay<PersonalPensionEntity>()
     let housingRelay = PublishRelay<HousingPensionEntity>()
+    let userRelay = PublishRelay<UserInfoEntity>()
 
     public struct Input {
         let isSelectedNationalCell: ControlEvent<IndexPath>
@@ -37,6 +41,7 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
         let nationalData: Signal<NationalPensionEntity>
         let personalData: Signal<PersonalPensionEntity>
         let housingData: Signal<HousingPensionEntity>
+        let userData: Signal<UserInfoEntity>
     }
 
     public func transform(_ input: Input) -> Output {
@@ -76,10 +81,17 @@ public class MyPensionViewModel: BaseViewModel, Stepper {
             .bind(to: housingRelay)
             .disposed(by: disposeBag)
 
+        input.viewDidLoad.asObservable()
+            .flatMap {
+                self.fetchUserInfoUseCase.execute()
+            }
+            .bind(to: userRelay)
+            .disposed(by: disposeBag)
         return Output(
             nationalData: nationalRelay.asSignal(),
             personalData: personalRelay.asSignal(),
-            housingData: housingRelay.asSignal()
+            housingData: housingRelay.asSignal(),
+            userData: userRelay.asSignal()
         )
     }
 }

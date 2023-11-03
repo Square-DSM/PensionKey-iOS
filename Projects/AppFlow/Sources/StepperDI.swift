@@ -57,7 +57,8 @@ extension StepperDI {
         let myPensionViewModel = MyPensionViewModel(
             fetchNationalPensionListUseCase: serviceDI.fetchNationalPensionListInject,
             fetchHousingPensionListUseCase: serviceDI.fetchHousingPensionListInject,
-            fetchPersonalPensionListUseCase: serviceDI.fetchPersonalPensionListInject
+            fetchPersonalPensionListUseCase: serviceDI.fetchPersonalPensionListInject,
+            fetchUserInfoUseCase: serviceDI.fetchUserInfo
         )
         let myNationalPensionDetailViewModel = MyNationalPensionDetailViewModel(
             fetchNationalPensionDetailListUseCase: serviceDI.fetchNationalPensionDetailListInject
