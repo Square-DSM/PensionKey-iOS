@@ -8,8 +8,8 @@ public enum PensionStep: Step {
     case myPensionRequire
     
     case myNationalPensionDetailRequire
-    case myPersonalPensionDetailRequire
-    case myHousingPensionDetailRequire
+    case myPersonalPensionDetailRequire(id: String)
+    case myHousingPensionDetailRequire(id: String)
     
     case noticeRequire
     case benefitRequire

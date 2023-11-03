@@ -9,6 +9,10 @@ import Core
 
 public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensionViewModel> {
 
+    public var id: String = ""
+
+    private let viewDidAppearRelay = PublishRelay<String>()
+
     private let scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = .white
@@ -37,7 +41,7 @@ public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensi
 
     private let pensionPriceLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "300,000원"
+        $0.text = "-원"
         $0.font = .titleLarge
     }
 
@@ -50,13 +54,13 @@ public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensi
     // MARK: 추가
     private let perPentionMarkLabel = UILabel().then {
         $0.textColor = .gray700
-        $0.text = "삼성 생명 다이렉트"
+        $0.text = "-"
         $0.font = .titleSmall
     }
 
     private let perPentionLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "삼성 인터넷 NEW 연금보험"
+        $0.text = "-"
         $0.font = .titleMedium
     }
 
@@ -73,12 +77,33 @@ public class MyPersonalPensionViewController: BaseViewController<MyPersonalPensi
 
     private let totalMonryLabel = UILabel().then {
         $0.textColor = .black
-        $0.text = "2,000,000원"
+        $0.text = "-원"
         $0.font = .titleMedium
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        viewDidAppearRelay.accept(id)
     }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    public override func bind() {
+        let input = MyPersonalPensionViewModel.Input(viewDidAppear: viewDidAppearRelay.asObservable())
+        let output = viewModel.transform(input)
+
+        output.personalPensionData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.pensionPriceLabel.text = "\(data.expectPension.toDecimal())원"
+                    owner.perPentionMarkLabel.text = data.companyName
+                    owner.perPentionLabel.text = data.productName
+                    owner.totalMonryLabel.text = "\(data.totalPaymentAmt.toDecimal())원"
+                }
+            )
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {

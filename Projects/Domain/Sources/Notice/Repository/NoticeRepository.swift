@@ -13,4 +13,6 @@ public protocol NoticeRepository {
     func searchNoticeList(keyword: String) -> Single<[NoticeEntity]>
 
     func searchKeyList() -> Single<[SearchKeyEntity]>
+
+    func fetchMyNoticeList() -> Single<[NoticeEntity]>
 }

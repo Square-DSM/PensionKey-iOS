@@ -6,6 +6,8 @@ import PensionKeyKit
 class MyNationalPensionCollectionViewCell: UICollectionViewCell {
     static let identifier = "MyNationalPensionCollectionViewCell"
 
+    let id: String = ""
+
     let pensionImageView = UIImageView().then {
         $0.layer.cornerRadius = 100
         $0.image = .nationalPension

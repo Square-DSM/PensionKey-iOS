@@ -9,6 +9,7 @@ public enum NoticeAPI {
     case fetchNoticeList
     case searchNoticeList(keyword: String)
     case searchKeyList
+    case fetchMyNoticeList
 }
 
 extension NoticeAPI: TargetType {
@@ -30,6 +31,8 @@ extension NoticeAPI: TargetType {
             return "feeds/search"
         case .searchKeyList:
             return "feeds/search-key"
+        case .fetchMyNoticeList:
+            return "feeds"
         }
     }
     
@@ -39,7 +42,7 @@ extension NoticeAPI: TargetType {
             return .post
         case .deleteNotice:
             return .delete
-        case .fetchNoticeDetail, .fetchNoticeList, .searchNoticeList, .searchKeyList:
+        case .fetchNoticeDetail, .fetchNoticeList, .searchNoticeList, .searchKeyList, .fetchMyNoticeList:
             return .get
         }
     }

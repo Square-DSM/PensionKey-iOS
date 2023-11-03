@@ -46,4 +46,10 @@ class NoticeDataSource {
             .map(SearchKeyListDTO.self)
             .map { $0.toDomain() }
     }
+
+    func fetchMyNoticeList() -> Single<[NoticeEntity]> {
+        return provider.rx.request(.fetchMyNoticeList)
+            .map(NoticeListDTO.self)
+            .map { $0.toDomain() }
+    }
 }

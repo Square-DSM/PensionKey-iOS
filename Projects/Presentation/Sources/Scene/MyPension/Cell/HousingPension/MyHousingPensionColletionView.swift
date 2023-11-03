@@ -6,6 +6,8 @@ import PensionKeyKit
 class MyHousingPensionColletionCell: UICollectionViewCell {
     static let identifier = "MyHousingPensionColletionCell"
 
+    var id: String = ""
+
     let pensionImageView = UIImageView().then {
         $0.layer.cornerRadius = 100
         $0.image = .housingPension
